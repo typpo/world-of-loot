@@ -6,3 +6,4 @@ cssmin==0.1.4
 jsmin==2.0.2
 django-registration
 -e git://github.com/yourcelf/django-registration-defaults.git#egg=django-registration-defaults
+python-memcached
