@@ -1,0 +1,64 @@
+{% extends "main/lootview.html" %}
+
+{% block hero %}{% endblock %}
+
+{% block toptext %}
+{% if not user.is_authenticated and pins|length > 0 %}
+<div class="login-plea">
+You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href="#">registering</a>.
+</div>
+{% endif %}
+
+{% if pins|length > 0 %}
+<div class="add-loot">
+<a href="#" class="btn js-add-pin">+ Add another</a>
+</div>
+{% endif %}
+
+{% if pins|length < 1 %}
+<div class="nothing-saved">
+  <h2>There's nothing here right now.  <a href="#" class="js-add-pin">Add something</a>.</h2>
+  <!--<a href="#add-item" role="button" class="btn" data-toggle="modal">Launch demo modal</a>-->
+</div>
+{% endif %}
+
+{# Modal #}
+<div class="modal hide" id="add-item" tabindex="-1" role="dialog" aria-labelledby="add-item-label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="add-item-label">Add gear or a mount</h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <input id="add-item-id" type="text" placeholder="Item id">
+    </form>
+    <div id="add-item-loader" style="display:none;">
+      <img src="/media/images/loader.gif"/>
+    </div>
+    <div id="add-item-image-container" class="image-container">
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary disabled btn-add-item">Add Item</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pins %}
+{% for pin in pins %}
+  <div class="pin">
+    <img src="{{ pin.item.image_set.all.0.path }}" width="230"/>
+    <p>
+    <a href="#" rel="item={{ pin.item.item_id }}">{{ pin.item.name }}</a>
+    </p>
+    <span class="details">
+      {{ pin.item.wants }} people <a href="#">want</a>,
+      {{ pin.item.haves }} people <a href="#">have</a>.
+    </span>
+    </a>
+  </div>
+{% endfor %}
+{% endblock %}

@@ -11,11 +11,12 @@ class Item(models.Model):
   icon = models.CharField(max_length=20)
   slot = models.CharField(max_length=20)
 
+  wants = models.IntegerField(default=1)
+  haves = models.IntegerField(default=0)
+
 class Pin(models.Model):
   item = models.ForeignKey(Item)
-  user = models.ForeignKey(User)
-  wants = models.IntegerField(default=0)
-  haves = models.IntegerField(default=0)
+  user = models.ForeignKey(User, null=True)
 
 class Image(models.Model):
   item = models.ForeignKey(Item)

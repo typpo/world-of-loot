@@ -69,3 +69,33 @@ body {
   color:#ddd;font-weight:bold;
   font-size: 12px;
 }
+
+.toptext .login-plea {
+  float: left;
+
+}
+
+.toptext .login-plea a {
+  text-decoration: underline;
+}
+
+.add-loot {
+  float: right;
+  margin-top: 8px;
+}
+
+.nothing-saved {
+  position: relative;
+  float: left;
+  top: 50px;
+  left: 10px;
+}
+
+.nothing-saved a {
+  text-decoration: underline;
+}
+
+#add-item .image-container img {
+  width: 300px;
+  height: auto;
+}
