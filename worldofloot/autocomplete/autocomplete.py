@@ -29,7 +29,7 @@ def create():
       item_type = m.group(1)
       canonicalized_name = canonicalize_input(m.group(3).replace('-', ' '))
 
-      engine.store_json(item_id, item_name, {
+      engine.store_json(item_id, canonicalized_name, {
         'name': item_name,
         'id': item_id,
         'type': item_type,

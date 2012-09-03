@@ -45,6 +45,7 @@ body {
   float: left;
   border: 1px solid #ccc;
   padding: 20px;
+  position: relative;
 }
 
 .pin img {
@@ -99,4 +100,12 @@ body {
 #add-item .image-container img {
   width: 300px;
   height: auto;
+}
+
+.delete-pin {
+  float:right;
+  position: relative;
+  top: 0;
+  right: 0;
+
 }

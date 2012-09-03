@@ -50,6 +50,7 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
 {% block pins %}
 {% for pin in pins %}
   <div class="pin">
+    <span class="delete-pin">×</span>
     <img src="{{ pin.item.image_set.all.0.path }}" width="230"/>
     <p>
     <a href="#" rel="{{ pin.item.item_type }}={{ pin.item.item_id }}">{{ pin.item.name }}</a>
