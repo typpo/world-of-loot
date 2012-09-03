@@ -23,6 +23,13 @@ function AddItemModal() {
     // TODO format to use data[i].name
     });
 
+    $('#add-item-id').on('keydown', function(e) {
+      var $submit = $('#add-item button.btn-add-item');
+      if (e.keyCode == 13 && !$submit.hasClass('disabled')) {
+        $submit.click();
+      }
+    });
+
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
@@ -41,7 +48,7 @@ function AddItemModal() {
       $('#add-item-id').val('').focus()
     });
 
-    // Delete pin
+    // Pin deletion
     $('.delete-pin').on('click', function() {
       var type = $(this).data('item-type');
       var id = $(this).data('item-id');
@@ -54,6 +61,7 @@ function AddItemModal() {
   this.LoadImage = function(id, type) {
     // Loads image after user selection
     var me = this;
+    me.loaded_image = false;
     $('#add-item-loader').show();
     $.getJSON('/info/' + type + '/' + id, function(data) {
       $('#add-item-loader').hide();
@@ -68,6 +76,7 @@ function AddItemModal() {
 
       $('#add-item button').removeClass('disabled');
       me.id = id;
+      me.loaded_image = true;
     });
   }
 }
