@@ -30,11 +30,10 @@ function AddItemModal() {
       }
     });
 
-
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
       // TODO some sort of loader
-      $.get('/add/' + me.id, function(data) {
+      $.get('/add/' + me.type + '/' + me.id, function(data) {
 
         $('#add-item').modal('hide');
         window.location.reload();
@@ -76,6 +75,7 @@ function AddItemModal() {
 
       $('#add-item button').removeClass('disabled');
       me.id = id;
+      me.type = type;
       me.loaded_image = true;
     });
   }

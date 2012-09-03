@@ -35,9 +35,12 @@ def my_loot(request):
     # TODO
     return HttpResponse('you be authed')
   else:
+    """
     if 'pins' not in request.session:
       request.session['pins'] = []
     pins = request.session['pins']
+    """
+    pins = Pin.objects.filter(session=request.session.session_key)
 
   items = []
   for pin in pins:
@@ -61,7 +64,7 @@ def get_item_info(request, item_type, item_id):
     return HttpResponse(status=500)
 
   try:
-    item = Item.objects.get(pk=id)
+    item = Item.objects.get(item_id=id, item_type=item_type)
     print 'Item #', id, 'already exists in database'
   except Item.DoesNotExist:
     print 'Grabbing info for item #', id
@@ -74,14 +77,16 @@ def get_item_info(request, item_type, item_id):
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 
-def add_item(request, item_id):
+def add_item(request, item_type, item_id):
   try:
     id = int(item_id)
   except:
-    return HttpResponse(status=500)
+    return HttpResponse('bad id', status=500)
 
   try:
-    item = Item.objects.get(pk=id)
+    item = Item.objects.get(item_id=id, item_type=item_type)
+    item.wants += 1
+    item.save()
   except Item.DoesNotExist:
     print 'Serving 500 because we got an add request for an item not yet scraped'
     return HttpResponse(status=500)
@@ -91,14 +96,9 @@ def add_item(request, item_id):
     # TODO
     pass
   else:
-    pin = Pin(item=item)
     # TODO session expiration
-    # Store it in the session for now
-    if not 'pins' in request.session:
-      request.session['pins'] = []
-    curpins = request.session['pins']
-    curpins.append(pin)  # TODO dedup
-    request.session['pins'] = curpins
+    pin = Pin(item=item, session=request.session.session_key)
+    pin.save()
     print 'Saved an anonymous pin'
 
   response = {'success': True}
@@ -116,9 +116,8 @@ def remove_item(request, item_type, item_id):
     # TODO
     pass
   else:
-    request.session['pins'] = filter(\
-        lambda pin: not (pin.item.pk == item_id and pin.item.item_type == item_type), \
-        request.session['pins'])
+    item = Item.objects.get(item_id=item_id, item_type=item_type)
+    Pin.objects.filter(session=request.session.session_key, item=item).delete()
 
   return HttpResponse(status=200)
 

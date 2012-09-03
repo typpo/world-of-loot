@@ -21,7 +21,8 @@ def scrape_item(id, item_type):
     print name, ilvl, quality, icon, slot
     item = Item(item_id=id, item_type=item_type, name=name,
         ilvl=ilvl, quality=quality, icon=icon, slot=slot)
-    item.set_tags([slot, quality])
+    print slot, quality
+    #item.set_tags([slot, quality])
   else:
     # a mount or spell or set
     name_regex = re.compile('\<meta property="og:title" content="(.*?)" /\>')
@@ -29,7 +30,8 @@ def scrape_item(id, item_type):
     name = m.group(1)
     print 'Non-item', name, item_type
     item = Item(item_id=id, item_type=item_type, name=name)
-    item.set_tags([item_type])
+    print item_type
+    #item.set_tags([item_type])
 
   # commit to db
   item.save()
