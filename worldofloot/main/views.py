@@ -45,7 +45,7 @@ def my_loot(request):
 
   })
 
-def get_item_info(request, item_id):
+def get_item_info(request, item_type, item_id):
   try:
     id = int(item_id)
   except:
@@ -56,7 +56,7 @@ def get_item_info(request, item_id):
     print 'Item #', id, 'already exists in database'
   except Item.DoesNotExist:
     print 'Grabbing info for item #', id
-    item = wowhead.scrape_item(id)
+    item = wowhead.scrape_item(id, item_type)
 
   response = {'success': True, 'images': [], 'name': item.name}
   for image in Image.objects.filter(item=item):

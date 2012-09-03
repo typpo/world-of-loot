@@ -6,10 +6,10 @@ class Item(models.Model):
   item_type = models.CharField(max_length=30)   # gear or mount
 
   name = models.CharField(max_length=75)
-  ilvl = models.IntegerField()
-  quality = models.CharField(max_length=20)
-  icon = models.CharField(max_length=20)
-  slot = models.CharField(max_length=20)
+  ilvl = models.IntegerField(default=-1)
+  quality = models.CharField(max_length=20, null=True)
+  icon = models.CharField(max_length=20, null=True)
+  slot = models.CharField(max_length=20, null=True)
 
   wants = models.IntegerField(default=1)
   haves = models.IntegerField(default=0)

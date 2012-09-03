@@ -7,9 +7,8 @@ from django.conf import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Example:
-    # (r'^worldofloot/', include('worldofloot.foo.urls')),
     (r'^', include('worldofloot.main.urls')),
+    (r'^autocomplete/', include('worldofloot.autocomplete.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

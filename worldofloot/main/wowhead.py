@@ -4,22 +4,34 @@ from xml.etree.ElementTree import parse
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
-def scrape_item(id):
-  xml = parse(urllib2.urlopen('http://www.wowhead.com/item=%d?xml' % id))
+def scrape_item(id, item_type):
+  html = urllib2.urlopen('http://www.wowhead.com/%s=%d'
+      % (item_type, id)).read()
+  if item_type == 'item':
+    # an actual piece of gear
+    xml = parse(urllib2.urlopen('http://www.wowhead.com/%s=%d?xml'
+      % (item_type, id)))
 
-  name = xml.find('item/name').text
-  ilvl = int(xml.find('item/level').text)
-  quality = xml.find('item/quality').text
-  icon = xml.find('item/icon').text
-  slot = xml.find('item/inventorySlot').text
+    name = xml.find('item/name').text
+    ilvl = int(xml.find('item/level').text)
+    quality = xml.find('item/quality').text
+    icon = xml.find('item/icon').text
+    slot = xml.find('item/inventorySlot').text
 
-  html = urllib2.urlopen('http://www.wowhead.com/item=%d' % id).read()
-  image_regex = re.compile("id:(\d+),user:'(.*?)'")
-
-  print name, ilvl, quality, icon, slot
-  item = Item(item_id=id, item_type='gear', name=name,
-      ilvl=ilvl, quality=quality, icon=icon, slot=slot)
+    print name, ilvl, quality, icon, slot
+    item = Item(item_id=id, item_type=item_type, name=name,
+        ilvl=ilvl, quality=quality, icon=icon, slot=slot)
+  else:
+    # a mount or spell or set
+    name_regex = re.compile('\<meta property="og:title" content="(.*?)" /\>')
+    m = name_regex.search(html)
+    name = m.group(1)
+    print 'Non-item', name, item_type
+    item = Item(item_id=id, item_type=item_type, name=name)
   item.save()
+
+
+  image_regex = re.compile("id:(\d+),user:'(.*?)'")
 
   image_count = 0
   for m in image_regex.finditer(html):

@@ -9,4 +9,6 @@ venv
 worldofloot/autocomplete/data
 bin
 lib
+src
 include
+.Python

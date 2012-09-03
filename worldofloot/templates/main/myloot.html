@@ -30,7 +30,7 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
   </div>
   <div class="modal-body">
     <form>
-      <input id="add-item-id" type="text" placeholder="Item id">
+      <input id="add-item-id" type="text" placeholder="">
     </form>
     <div id="add-item-loader" style="display:none;">
       <img src="/media/images/loader.gif"/>
@@ -52,7 +52,7 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
   <div class="pin">
     <img src="{{ pin.item.image_set.all.0.path }}" width="230"/>
     <p>
-    <a href="#" rel="item={{ pin.item.item_id }}">{{ pin.item.name }}</a>
+    <a href="#" rel="{{ pin.item.item_type }}={{ pin.item.item_id }}">{{ pin.item.name }}</a>
     </p>
     <span class="details">
       {{ pin.item.wants }} people <a href="#">want</a>,

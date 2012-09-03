@@ -1,24 +1,29 @@
 function AddItemModal() {
   this.Init = function() {
     var me = this;
-    $('#add-item-id').on('change', function() {
-      var id = $.trim($(this).val());
-      if (id === '') return;
-      $('#add-item-loader').show();
-      $.getJSON('/info/' + id, function(data) {
-        $('#add-item-loader').hide();
-        if (!data || !data.images) {
-          alert("Sorry, I couldn't find this item.  Please try something different.");
-          return;
+
+    // Autocomplete
+    $("#add-item-id").autocomplete({
+      minLength: 2,
+      source: function(request, response) {
+        $.getJSON('/autocomplete/' + request.term, function(data) {
+          var arr = [];
+          for (var i=0; i < data.length; i++) {
+            arr.push({data: data[i],
+              label: data[i].name, value: data[i].name});
+          }
+          response(arr);
+        });
+      },
+      select: function(event, ui) {
+        if (ui.item) {
+          me.LoadImage(ui.item.data.id, ui.item.data.type);
         }
-
-        $('#add-item-image-container').html('<a href="#" rel="item=' + id + '"><h3>' + data.name + '</h3><img src="' + data.images[0] + '"/></a>');
-
-        $('#add-item button').removeClass('disabled');
-        me.id = id;
-      });
+      }
     });
 
+
+    // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
       // TODO some sort of loader
       $.get('/add/' + me.id, function(data) {
@@ -32,6 +37,26 @@ function AddItemModal() {
     $('a.js-add-pin').on('click', function() {
       $('#add-item').modal();
       $('#add-item-id').focus()
+    });
+  }
+
+  this.LoadImage = function(id, type) {
+    // Loads image after user selection
+    var me = this;
+    $('#add-item-loader').show();
+    $.getJSON('/info/' + type + '/' + id, function(data) {
+      $('#add-item-loader').hide();
+      if (!data || !data.images) {
+        alert("Sorry, I couldn't find this item.  Please try something different.");
+        return;
+      }
+
+      $('#add-item-image-container').html('<a href="#" rel="'
+        + type + '=' + id + '"><h3>' + data.name
+        + '</h3><img src="' + data.images[0] + '"/></a>');
+
+      $('#add-item button').removeClass('disabled');
+      me.id = id;
     });
   }
 }
