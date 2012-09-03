@@ -33,7 +33,6 @@ body {
 .pins {
   top: 55px;
   left: 0;
-  margin-left: -35px;
   position: relative;
   background: #eee;
   z-index: 100;
@@ -41,15 +40,14 @@ body {
 
 .pin {
   background: #404040;
-  width: 210px;
+  width: 250px;
   float: left;
   border: 1px solid #ccc;
-  padding: 20px;
-  position: relative;
+  padding: 5px;
 }
 
 .pin img {
-  width: 210px;
+  width: 250px;
   padding: 0;
   margin: 0;
 }
@@ -70,6 +68,21 @@ body {
 .pin span.details a {
   color:#ddd;font-weight:bold;
   font-size: 12px;
+}
+
+.pin .delete-pin {
+  float:right;
+  position: absolute;
+  top: 0;
+  right: 4px;
+  font-size: 18px;
+  color: #aaa;
+}
+
+.pin .delete-pin a:hover {
+  color: red;
+  text-decoration: none;
+
 }
 
 .toptext .login-plea {
@@ -100,12 +113,4 @@ body {
 #add-item .image-container img {
   width: 300px;
   height: auto;
-}
-
-.delete-pin {
-  float:right;
-  position: relative;
-  top: 0;
-  right: 0;
-
 }

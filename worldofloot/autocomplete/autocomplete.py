@@ -16,24 +16,35 @@ def create():
   print 'Flushing old...'
   engine.flush()
   print 'Creating...'
-  regex = re.compile('wowhead.com/(item|spell|itemset|transmog-set)=(.*?)/(.*?)<')
+  #regex = re.compile('wowhead.com/(item|spell|itemset|transmog-set)=(.*?)/(.*?)<')
+  regex = re.compile('wowhead.com/(item|spell|itemset|transmog-set)=(.*?)/(.*?)</loc>(<priority>(.*?)<)?')
   c = 0
   itemname_set = set()
   dict_lookup = {}
   for line in open(CRAWL_DATA_PATH):
     m = regex.search(line)
-    if m and len(m.groups()) == 3:
+    if m and len(m.groups()) > 2:
       c += 1
       item_id = m.group(2)
       item_name = m.group(3).replace('-', ' ')
       item_type = m.group(1)
+      if len(m.groups()) > 4 and m.group(5):
+        priority = float(m.group(5))
+      else:
+        priority = 0
       canonicalized_name = canonicalize_input(m.group(3).replace('-', ' '))
+
+      # TODO some are getting overwritten - order matters!
 
       engine.store_json(item_id, canonicalized_name, {
         'name': item_name,
         'id': item_id,
         'type': item_type,
+        'priority': priority
       })
+    else:
+      print 'Failed on line', line
+  print 'Added', c
   print 'Done.'
 
 def search(q):
@@ -41,7 +52,7 @@ def search(q):
   # the likelihood that an image is available.
   # TODO move some of this to preprocessing
   results = engine.search_json(canonicalize_input(q))
-  ret = []
+  return sorted(results, key=lambda k: k['priority'], reverse=True)
   results_by_name = {}
   # group results by name
   for result in results:
@@ -56,7 +67,9 @@ def search(q):
       or name.endswith('old') or name.find('effect') > -1 \
       or name.find('portal') > -1 or name.startswith('create') \
       or name.startswith('aggro') or name.endswith('credit') \
-      or name.endswith('cosmetic'):
+      or name.endswith('cosmetic') or name.startswith('remove') \
+      or name.find('dnd') > -1 or name.endswith('spawn') \
+      or name.find('teleport') > -1 or name.startswith('camera'):
       continue
     results_by_name.setdefault(name, [])
     results_by_name[name].append(result)

@@ -20,6 +20,7 @@ function AddItemModal() {
           me.LoadImage(ui.item.data.id, ui.item.data.type);
         }
       }
+    // TODO format to use data[i].name
     });
 
 
@@ -66,7 +67,7 @@ $(function() {
   $handler.imagesLoaded(function() {
     $handler.wookmark({
       offset: 10,
-      itemWidth: 250,
+      itemWidth: 260,
       autoResize: true,
     });
     /*
