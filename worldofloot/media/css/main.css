@@ -31,9 +31,10 @@ body {
 }
 
 .pins {
-  top: 265px;
+  top: 55px;
   left: 0;
-  position: absolute;
+  margin-left: -35px;
+  position: relative;
   background: #eee;
   z-index: 100;
 }

@@ -37,8 +37,50 @@ def create():
   print 'Done.'
 
 def search(q):
-  # TODO dedup and pick by highest id
-  return engine.search_json(canonicalize_input(q))
+  # Dedup items by name in a way that will hopefully increase
+  # the likelihood that an image is available.
+  # TODO move some of this to preprocessing
+  results = engine.search_json(canonicalize_input(q))
+  ret = []
+  results_by_name = {}
+  # group results by name
+  for result in results:
+    name = result['name']
+    # reject bad items
+    # TODO make this neater
+    # TODO or name contains number
+    if name.find('test') > -1 or name.endswith('visual') \
+      or name.find('summon') > -1 or name.startswith('put up') \
+      or name.endswith('aura') or name.startswith('monster') \
+      or name.startswith('flight path') or name.startswith('copy') \
+      or name.endswith('old') or name.find('effect') > -1 \
+      or name.find('portal') > -1 or name.startswith('create') \
+      or name.startswith('aggro') or name.endswith('credit') \
+      or name.endswith('cosmetic'):
+      continue
+    results_by_name.setdefault(name, [])
+    results_by_name[name].append(result)
+
+  # then dedup
+  final_results = []
+  for name, results in results_by_name.iteritems():
+    # prefer items over spells
+    items = []
+    results_for_this_name = results
+    for result in results:
+      if result['type'] == 'item':
+        items.append(result)
+    if len(items) > 0:
+      # only choose from just items
+      results_for_this_name = items
+
+    # now choose the highest id, because that seems to be the aggregator
+    if len(results_for_this_name) > 0:
+      new_results = sorted(results_for_this_name,
+          key=lambda k: k['id'], reverse=True)
+      final_results.append(new_results[0])
+
+  return final_results
 
 if __name__ == '__main__':
   if len(sys.argv) > 1 and sys.argv[1] == 'create':
