@@ -53,6 +53,8 @@ def search(q):
   # TODO move some of this to preprocessing
   results = engine.search_json(canonicalize_input(q))
   return sorted(results, key=lambda k: k['priority'], reverse=True)
+
+  """
   results_by_name = {}
   # group results by name
   for result in results:
@@ -94,6 +96,7 @@ def search(q):
       final_results.append(new_results[0])
 
   return final_results
+  """
 
 if __name__ == '__main__':
   if len(sys.argv) > 1 and sys.argv[1] == 'create':

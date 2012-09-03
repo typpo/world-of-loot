@@ -22,9 +22,15 @@ class Item(models.Model):
   def get_tags(self):
     return Tag.objects.get_for_object(self)
 
+  def __unicode__(self):
+    return 'Item %s' % (self.name)
+
 class Pin(models.Model):
   item = models.ForeignKey(Item)
   user = models.ForeignKey(User, null=True)
+
+  def __unicode__(self):
+    return 'Pin of %s by %s' % (self.item.name, self.user.email)
 
 class Image(models.Model):
   item = models.ForeignKey(Item)
@@ -32,6 +38,13 @@ class Image(models.Model):
   path = models.CharField(max_length=200)
   thumb_path = models.CharField(max_length=200)
   attribution = models.CharField(max_length=25)
+
+  priority = models.IntegerField()  # lower is better
+
+  def __unicode__(self):
+    return 'Image for %s' % (self.item.name)
+
+
 
 # Introspection rules for south
 try:

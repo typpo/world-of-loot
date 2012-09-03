@@ -36,8 +36,18 @@ function AddItemModal() {
 
     // Show modal dialog
     $('a.js-add-pin').on('click', function() {
+      $('#add-item-image-container').empty();
       $('#add-item').modal();
-      $('#add-item-id').focus()
+      $('#add-item-id').val('').focus()
+    });
+
+    // Delete pin
+    $('.delete-pin').on('click', function() {
+      var type = $(this).data('item-type');
+      var id = $(this).data('item-id');
+      $.getJSON('/remove/' + type + '/' + id, function(data) {
+        window.location.reload();
+      });
     });
   }
 

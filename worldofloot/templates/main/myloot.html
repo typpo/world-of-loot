@@ -3,19 +3,19 @@
 {% block hero %}{% endblock %}
 
 {% block toptext %}
-{% if not user.is_authenticated and pins|length > 0 %}
+{% if not user.is_authenticated and items|length > 0 %}
 <div class="login-plea">
 You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href="#">registering</a>.
 </div>
 {% endif %}
 
-{% if pins|length > 0 %}
+{% if items|length > 0 %}
 <div class="add-loot">
 <a href="#" class="btn js-add-pin">+ Add another</a>
 </div>
 {% endif %}
 
-{% if pins|length < 1 %}
+{% if items|length < 1 %}
 <div class="nothing-saved">
   <h2>There's nothing here right now.  <a href="#" class="js-add-pin">Add something</a>.</h2>
   <!--<a href="#add-item" role="button" class="btn" data-toggle="modal">Launch demo modal</a>-->
@@ -48,16 +48,16 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
 {% endblock %}
 
 {% block pins %}
-{% for pin in pins %}
+{% for item in items %}
   <div class="pin">
-    <div class="delete-pin"><a href="#">×</a></div>
-    <img src="{{ pin.item.image_set.all.0.path }}" />
+    <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
+    <img src="{{ item.image.path }}" />
     <p>
-    <a href="#" rel="{{ pin.item.item_type }}={{ pin.item.item_id }}">{{ pin.item.name }}</a>
+    <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
     </p>
     <span class="details">
-      {{ pin.item.wants }} people <a href="#">want</a>,
-      {{ pin.item.haves }} people <a href="#">have</a>.
+      {{ item.wants }} people <a href="#">want</a>,
+      {{ item.haves }} people <a href="#">have</a>.
     </span>
     </a>
   </div>

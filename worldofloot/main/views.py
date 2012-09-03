@@ -39,8 +39,17 @@ def my_loot(request):
       request.session['pins'] = []
     pins = request.session['pins']
 
+  items = []
+  for pin in pins:
+    item = pin.item
+    images = item.image_set.order_by('priority')
+    if len(images) > 0:
+      item.image = images[0]
+    items.append(item)
+
+  print items
   return render_to_response('main/myloot.html', {
-    'pins': pins,
+    'items': items,
     'tab': 'my_loot',
 
   })
@@ -59,8 +68,9 @@ def get_item_info(request, item_type, item_id):
     item = wowhead.scrape_item(id, item_type)
 
   response = {'success': True, 'images': [], 'name': item.name}
-  for image in Image.objects.filter(item=item):
+  for image in Image.objects.filter(item=item).order_by('priority'):
     response['images'].append(image.path)
+
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 
@@ -78,10 +88,11 @@ def add_item(request, item_id):
 
   if request.user.is_authenticated():
     # logged in
+    # TODO
     pass
   else:
     pin = Pin(item=item)
-    pin.save()
+    # TODO session expiration
     # Store it in the session for now
     if not 'pins' in request.session:
       request.session['pins'] = []
@@ -93,7 +104,22 @@ def add_item(request, item_id):
   response = {'success': True}
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
-def remove_item(request):
+def remove_item(request, item_type, item_id):
+  # doing this by item_id for now...maybe in the future take a pin id?
+  try:
+    id = int(item_id)
+  except:
+    return HttpResponse(status=500)
+
+
+  if request.user.is_authenticated():
+    # TODO
+    pass
+  else:
+    request.session['pins'] = filter(\
+        lambda pin: not (pin.item.pk == item_id and pin.item.item_type == item_type), \
+        request.session['pins'])
+
   return HttpResponse(status=200)
 
 def vote_want(request):
@@ -101,7 +127,6 @@ def vote_want(request):
 
 def vote_have(request):
   return HttpResponse(status=200)
-
 
 def convert_session_to_user():
   pass

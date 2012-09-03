@@ -37,6 +37,7 @@ def scrape_item(id, item_type):
   # now look for images
   image_regex = re.compile("id:(\d+),user:'(.*?)'")
   image_count = 0
+  images = []
   for m in image_regex.finditer(html):
     image_id = m.group(1)
     attribution = m.group(2)
@@ -44,11 +45,13 @@ def scrape_item(id, item_type):
 
     path = 'http://wow.zamimg.com/uploads/screenshots/normal/%s.jpg' % image_id
     thumb_path = 'http://wow.zamimg.com/uploads/screenshots/thumb/%s.jpg' % image_id
+    # TODO parse sticky:1 for best image
 
     print '\tImage:', image_id, 'by', attribution
 
-    image = Image(item=item, image_id=image_id, path=path,
-        thumb_path=thumb_path, attribution=attribution)
-    image.save()
+    images.append(Image(item=item, image_id=image_id, path=path,
+        thumb_path=thumb_path, attribution=attribution,
+        priority=image_count))
+  Image.objects.bulk_create(images)
 
   return item
