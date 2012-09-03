@@ -3,5 +3,10 @@
 *.swo
 *.db
 *.pyc
+*.rdb
 bootstrap
 venv
+worldofloot/autocomplete/data
+bin
+lib
+include
