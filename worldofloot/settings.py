@@ -111,4 +111,6 @@ INSTALLED_APPS = (
 
     'main',
     'registration',
+    'tagging',
+    'south',
 )

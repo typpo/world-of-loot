@@ -21,6 +21,7 @@ def scrape_item(id, item_type):
     print name, ilvl, quality, icon, slot
     item = Item(item_id=id, item_type=item_type, name=name,
         ilvl=ilvl, quality=quality, icon=icon, slot=slot)
+    item.set_tags([slot, quality])
   else:
     # a mount or spell or set
     name_regex = re.compile('\<meta property="og:title" content="(.*?)" /\>')
@@ -28,11 +29,13 @@ def scrape_item(id, item_type):
     name = m.group(1)
     print 'Non-item', name, item_type
     item = Item(item_id=id, item_type=item_type, name=name)
+    item.set_tags([item_type])
+
+  # commit to db
   item.save()
 
-
+  # now look for images
   image_regex = re.compile("id:(\d+),user:'(.*?)'")
-
   image_count = 0
   for m in image_regex.finditer(html):
     image_id = m.group(1)
