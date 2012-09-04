@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from tagging.fields import TagField
-from tagging.models import Tag
 import tagging
 
 class Item(models.Model):
@@ -10,20 +8,12 @@ class Item(models.Model):
 
   name = models.CharField(max_length=75)
   ilvl = models.IntegerField(default=-1)
-  quality = models.CharField(max_length=20, null=True)
+  quality = models.CharField(max_length=20, null=True) # TODO convert to select
   icon = models.CharField(max_length=20, null=True)
-  slot = models.CharField(max_length=20, null=True)
+  slot = models.CharField(max_length=20, null=True) # TODO convert to select
 
   wants = models.IntegerField(default=0)
   haves = models.IntegerField(default=0)
-
-  """
-  tags = TagField()
-  def set_tags(self, tags):
-    Tag.objects.update_tags(self, tags)
-  def get_tags(self):
-    return Tag.objects.get_for_object(self)
-  """
 
   def __unicode__(self):
     return 'Item %s' % (self.name)
@@ -32,6 +22,7 @@ class Pin(models.Model):
   item = models.ForeignKey(Item)
   user = models.ForeignKey(User, null=True)
   session = models.CharField(max_length=60, null=True)
+  verb = models.CharField(max_length=10) # TODO convert to select
 
   def __unicode__(self):
     return 'Pin of %s by %s' % (self.item.name, self.user.email)
@@ -48,12 +39,11 @@ class Image(models.Model):
   def __unicode__(self):
     return 'Image for %s' % (self.item.name)
 
-
-
+"""
 # Introspection rules for south
 try:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^tagging\.fields\.TagField"])
 except ImportError:
     pass
-
+"""

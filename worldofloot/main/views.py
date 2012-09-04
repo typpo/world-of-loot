@@ -32,14 +32,8 @@ def popular_mounts(request):
 def my_loot(request):
   # get pins
   if request.user.is_authenticated():
-    # TODO
-    return HttpResponse('you be authed')
+    pins = Pin.objects.filter(user=request.user)
   else:
-    """
-    if 'pins' not in request.session:
-      request.session['pins'] = []
-    pins = request.session['pins']
-    """
     pins = Pin.objects.filter(session=request.session.session_key)
 
   items = []
@@ -77,7 +71,10 @@ def get_item_info(request, item_type, item_id):
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 
-def add_item(request, item_type, item_id):
+def add_item(request, item_type, item_id, verb):
+  if verb not in ['want', 'have']:
+    return HttpResponse('bad verb', status=500)
+
   try:
     id = int(item_id)
   except:
@@ -85,23 +82,53 @@ def add_item(request, item_type, item_id):
 
   try:
     item = Item.objects.get(item_id=id, item_type=item_type)
-    item.wants += 1
-    item.save()
   except Item.DoesNotExist:
     print 'Serving 500 because we got an add request for an item not yet scraped'
     return HttpResponse(status=500)
 
+  already_have = False
+  increment_item_verb = False
   if request.user.is_authenticated():
     # logged in
-    # TODO
-    pass
+    try:
+      pin = Pin.objects.get(item=item, user=request.user)
+      # check to make sure they didn't switch verb
+      if pin.verb == verb:
+        already_have = True
+      else:
+        # keep old wants and haves
+        increment_item_verb = True
+        pin.verb = verb
+        pin.save()
+    except Pin.DoesNotExist:
+      pin = Pin(item=item, user=request.user)
+      pin.save()
+      increment_item_verb = True
   else:
     # TODO session expiration
-    pin = Pin(item=item, session=request.session.session_key)
-    pin.save()
-    print 'Saved an anonymous pin'
+    try:
+      pin = Pin.objects.get(item=item, session=request.session.session_key)
+      # check to make sure they didn't switch verb
+      if pin.verb == verb:
+        already_have = True
+      else:
+        # keep old wants and haves
+        increment_item_verb = True
+        pin.verb = verb
+        pin.save()
+    except Pin.DoesNotExist:
+      pin = Pin(item=item, session=request.session.session_key)
+      pin.save()
+      increment_item_verb = True
 
-  response = {'success': True}
+  if increment_item_verb:
+    if verb == 'want':
+      item.wants += 1
+    elif verb == 'have':
+      item.haves += 1
+    item.save()
+
+  response = {'success': True, 'already_have': already_have}
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def remove_item(request, item_type, item_id):
@@ -112,11 +139,10 @@ def remove_item(request, item_type, item_id):
     return HttpResponse(status=500)
 
 
+  item = Item.objects.get(item_id=item_id, item_type=item_type)
   if request.user.is_authenticated():
-    # TODO
-    pass
+    Pin.objects.filter(user=request.user, item=item).delete()
   else:
-    item = Item.objects.get(item_id=item_id, item_type=item_type)
     Pin.objects.filter(session=request.session.session_key, item=item).delete()
 
   return HttpResponse(status=200)

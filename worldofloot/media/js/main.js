@@ -32,12 +32,12 @@ function AddItemModal() {
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
-      // TODO some sort of loader
-      $.get('/add/' + me.type + '/' + me.id, function(data) {
-
+      me.AddItem(me.id, me.type, 'want', function(err, success) {
+        if (err) return;
         $('#add-item').modal('hide');
+        // TODO maybe don't reload because it resets scrolling
         window.location.reload();
-      }, 'json');
+      });
     });
 
     // Show modal dialog
@@ -53,6 +53,20 @@ function AddItemModal() {
       var id = $(this).data('item-id');
       $.getJSON('/remove/' + type + '/' + id, function(data) {
         window.location.reload();
+      });
+    });
+
+    // Wants
+    $('.js-item-want').on('click', function() {
+      me.AddItem($(this).data('item-id'), $(this).data('item-type'), 'want', function() {
+        window.location.reload();  // TODO maybe no refresh
+      });
+    });
+
+    // Haves
+    $('.js-item-have').on('click', function() {
+      me.AddItem($(this).data('item-id'), $(this).data('item-type'), 'have', function() {
+        window.location.reload();  // TODO maybe no refresh
       });
     });
   }
@@ -78,6 +92,20 @@ function AddItemModal() {
       me.type = type;
       me.loaded_image = true;
     });
+  }
+
+  this.AddItem = function(id, type, verb, callback) {
+    // TODO this belongs in a general function, not just additemmodal
+    // TODO some sort of loader
+    $.get('/add/' + type + '/' + id + '/' + verb, function(data) {
+      if (data.already_have) {
+        alert("You already added this!");
+        callback(true, null);
+      }
+      else {
+        callback(null, true);
+      }
+    }, 'json');
   }
 }
 

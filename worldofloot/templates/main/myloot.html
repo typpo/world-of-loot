@@ -56,8 +56,8 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
     <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
     </p>
     <span class="details">
-      {{ item.wants }} people <a href="#">want</a>,
-      {{ item.haves }} people <a href="#">have</a>.
+      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
+      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>,
     </span>
     </a>
   </div>
