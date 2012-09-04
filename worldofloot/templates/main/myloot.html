@@ -22,7 +22,28 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
 </div>
 {% endif %}
 
-{# Modal #}
+{% endblock %}
+
+{% block pins %}
+{% for item in items %}
+  <div class="pin">
+    <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
+    <img src="{{ item.image.path }}" />
+    <p>
+    <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
+    </p>
+    <span class="details">
+      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
+      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>,
+    </span>
+    </a>
+  </div>
+{% endfor %}
+{% endblock %}
+
+{% block bottom %}
+{{ block.super }}
+{# Add Item Modal #}
 <div class="modal hide" id="add-item" tabindex="-1" role="dialog" aria-labelledby="add-item-label" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -44,22 +65,4 @@ You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href=
     <button class="btn btn-primary disabled btn-add-item">Add Item</button>
   </div>
 </div>
-
-{% endblock %}
-
-{% block pins %}
-{% for item in items %}
-  <div class="pin">
-    <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
-    <img src="{{ item.image.path }}" />
-    <p>
-    <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
-    </p>
-    <span class="details">
-      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
-      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>,
-    </span>
-    </a>
-  </div>
-{% endfor %}
 {% endblock %}

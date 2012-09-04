@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 import tagging
 
+class UserProfile(models.Model):
+  user = models.OneToOneField(User)
+
+  # nothing else for now
+
 class Item(models.Model):
   item_id = models.CharField(max_length=10)
   item_type = models.CharField(max_length=30)   # gear or mount
@@ -20,7 +25,7 @@ class Item(models.Model):
 
 class Pin(models.Model):
   item = models.ForeignKey(Item)
-  user = models.ForeignKey(User, null=True)
+  user = models.ForeignKey(User, null=True) # TODO convert to profile?
   session = models.CharField(max_length=60, null=True)
   verb = models.CharField(max_length=10) # TODO convert to select
 

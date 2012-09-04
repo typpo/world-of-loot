@@ -98,6 +98,46 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates/'),
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+    "django.core.context_processors.csrf",
+)
+
+AUTHENTICATION_BACKENDS = (
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+# Accounts settings
+ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
+ACCOUNT_UNIQUE_EMAIL = False
+ACCOUNT_PASSWORD_MIN_LENGTH = 1
+SOCIALACCOUNT_AUTO_SIGNUP=True
+SOCIALACCOUNT_PROVIDERS = \
+  {
+    'google': {
+      'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile']
+    },
+    'facebook': {
+      'SCOPE': [],
+      'METHOD': 'oauth2',
+      'LOCALE_FUNC': lambda r: 'en_US',
+    }
+  }
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
+
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -110,7 +150,14 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'main',
-    'registration',
-    'tagging',
+    'taggit',
     'south',
+
+    #'allauth',
+    #'allauth.account',
+    #'allauth.socialaccount',
+    #'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.linkedin',
+    #'allauth.socialaccount.providers.openid',
 )

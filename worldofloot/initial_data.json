@@ -1,0 +1,2 @@
+[{ "pk": 1, "model": "sites.site", "fields": { "name": "World of Loot", "domain":"worldofloot.com" } }
+]

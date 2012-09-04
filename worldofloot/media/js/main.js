@@ -33,7 +33,9 @@ function AddItemModal() {
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
       me.AddItem(me.id, me.type, 'want', function(err, success) {
-        if (err) return;
+        if (err) {
+          return;
+        }
         $('#add-item').modal('hide');
         // TODO maybe don't reload because it resets scrolling
         window.location.reload();
@@ -58,14 +60,24 @@ function AddItemModal() {
 
     // Wants
     $('.js-item-want').on('click', function() {
-      me.AddItem($(this).data('item-id'), $(this).data('item-type'), 'want', function() {
+      me.AddItem($(this).data('item-id'), $(this).data('item-type'),
+        'want', function(err, success) {
+        if (err) {
+          alert("You already did this!");
+          return;
+        }
         window.location.reload();  // TODO maybe no refresh
       });
     });
 
     // Haves
     $('.js-item-have').on('click', function() {
-      me.AddItem($(this).data('item-id'), $(this).data('item-type'), 'have', function() {
+      me.AddItem($(this).data('item-id'), $(this).data('item-type'),
+        'have', function(err, success) {
+        if (err) {
+          alert("You already did this!");
+          return;
+        }
         window.location.reload();  // TODO maybe no refresh
       });
     });
@@ -99,13 +111,43 @@ function AddItemModal() {
     // TODO some sort of loader
     $.get('/add/' + type + '/' + id + '/' + verb, function(data) {
       if (data.already_have) {
-        alert("You already added this!");
         callback(true, null);
       }
       else {
         callback(null, true);
       }
     }, 'json');
+  }
+}
+
+function AuthManager() {
+  this.Init = function() {
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      crossDomain: false,
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+          xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+        }
+      }
+    });
+    $('#login-register-modal button.submit').on('click', function() {
+      alert('asdasdasd');
+      $.post('/create_user/', {
+        username: $('#login-register-username').val(),
+        password: $('#login-register-password').val(),
+      }, function(data) {
+        alert(data);
+      }, 'json');
+      return false;
+    });
+  }
+
+  this.Login = function(username, password) {
+
   }
 }
 
@@ -127,4 +169,7 @@ $(function() {
 
   var add_modal = new AddItemModal();
   add_modal.Init();
+
+  window.auth_manager = new AuthManager();
+  auth_manager.Init();
 });

@@ -7,4 +7,6 @@ jsmin==2.0.2
 django-registration
 python-memcached
 redis-completion
-django-tagging
+django-taggit
+django-allauth
+py-bcrypt

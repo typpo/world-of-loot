@@ -7,4 +7,5 @@ urlpatterns = patterns('worldofloot.main.views',
     url(r'^info/(.*)/(.*)', 'get_item_info', name='get_item_info'),
     url(r'^add/(.*)/(.*)/(.*)', 'add_item', name='add_item'),
     url(r'^remove/(.*)/(.*)', 'remove_item', name='remove_item'),
+    url(r'^create_user/', 'create_user', name='create_user'),
 )

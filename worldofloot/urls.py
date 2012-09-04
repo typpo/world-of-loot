@@ -15,7 +15,8 @@ urlpatterns = patterns('',
 
     (r'^admin/', include(admin.site.urls)),
     #(r'^admin/', include('django.contrib.admin.urls')),
-    (r'^accounts/', include('registration.backends.simple.urls')),
+    #(r'^accounts/', include('registration.backends.simple.urls')),
+    (r'^accounts/', include('allauth.urls')),
     #(r'^accounts/', include('registration.urls')),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve',

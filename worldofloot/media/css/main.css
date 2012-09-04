@@ -114,3 +114,8 @@ body {
   width: 300px;
   height: auto;
 }
+
+/* bootstrap modifications (temporary until I recompile it */
+.modal {
+  background-color: #232323;
+}
