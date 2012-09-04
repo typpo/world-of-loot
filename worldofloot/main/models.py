@@ -4,6 +4,7 @@ import tagging
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User)
+  created = models.DateTimeField(auto_now_add=True)
 
   # nothing else for now
 
@@ -20,6 +21,9 @@ class Item(models.Model):
   wants = models.IntegerField(default=0)
   haves = models.IntegerField(default=0)
 
+  created = models.DateTimeField(auto_now_add=True)
+  modified = models.DateTimeField(auto_now=True)
+
   def __unicode__(self):
     return 'Item %s' % (self.name)
 
@@ -28,6 +32,9 @@ class Pin(models.Model):
   user = models.ForeignKey(User, null=True) # TODO convert to profile?
   session = models.CharField(max_length=60, null=True)
   verb = models.CharField(max_length=10) # TODO convert to select
+
+  created = models.DateTimeField(auto_now_add=True)
+  modified = models.DateTimeField(auto_now=True)
 
   def __unicode__(self):
     return 'Pin of %s by %s' % (self.item.name, self.user.email)

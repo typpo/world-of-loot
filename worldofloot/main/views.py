@@ -15,23 +15,19 @@ def index(request):
   return recent(request)
 
 def recent(request):
-  return render(request, 'main/index.html', {
+  items = Item.objects.order_by('-created')
+  template_items = set_images_for_items(items)
+  return render(request, 'main/myloot.html', {
+    'items': template_items,
     'tab': 'recent',
-
   })
 
-def popular_gear(request):
-  pins = Pin.objects.filter(item_type='gear').order_by('wants')
-  return render(request, 'main/index.html', {
-    pins: pins,
-
-  })
-
-def popular_mounts(request):
-  pins = Pin.objects.filter(item_type='mount').order_by('wants')
-  return render(request, 'main/index.html', {
-    pins: pins,
-
+def popular(request):
+  items = Item.objects.order_by('-wants')
+  template_items = set_images_for_items(items)
+  return render(request, 'main/myloot.html', {
+    'items': template_items,
+    'tab': 'popular',
   })
 
 def my_loot(request):
@@ -48,6 +44,7 @@ def my_loot(request):
   else:
     pins = Pin.objects.filter(session=request.session['anon_key'], user__isnull=True)
 
+  # TODO get items from pins and use set_images_for_items
   items = []
   for pin in pins:
     item = pin.item
@@ -56,7 +53,6 @@ def my_loot(request):
       item.image = images[0]
     items.append(item)
 
-  print items
   return render(request, 'main/myloot.html', {
     'items': items,
     'tab': 'my_loot',
@@ -187,4 +183,13 @@ def convert_session_to_user():
   pass
 
 def random_string(n):
-  return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(n))
+  return ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for x in range(n))
+
+def set_images_for_items(items):
+  ret = []
+  for item in items:
+    images = item.image_set.order_by('priority')
+    if len(images) > 0:
+      item.image = images[0]
+    ret.append(item)
+  return ret
