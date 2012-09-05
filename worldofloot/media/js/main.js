@@ -122,9 +122,11 @@ function AddItemModal() {
 
 function AuthManager() {
   this.Init = function() {
+    var me = this;
+
+    // csrf stuff
     function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
     $.ajaxSetup({
       crossDomain: false,
@@ -134,16 +136,31 @@ function AuthManager() {
         }
       }
     });
-    $('#login-register-modal button.submit').on('click', function() {
-      alert('asdasdasd');
-      $.post('/create_user/', {
+
+    // Login/register button
+    $('#login-register-modal a.submit').on('click', function() {
+      $.post('/login_or_create/', {
         username: $('#login-register-username').val(),
         password: $('#login-register-password').val(),
+        remember_me: $('#login-register-remember-me').prop('checked') ? true : false
       }, function(data) {
-        alert(data);
+        if (data && data.success)
+          window.location.reload()
+        else
+          alert('Login failed.  Reason: ' + data.reason);
       }, 'json');
       return false;
     });
+
+    // Show modal
+    $('a.js-login').on('click', function() {
+      me.ShowLogin();
+      return false;
+    });
+  }
+
+  this.ShowLogin = function() {
+    $('#login-register-modal').modal();
   }
 
   this.Login = function(username, password) {

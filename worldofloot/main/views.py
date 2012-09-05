@@ -5,7 +5,7 @@ import string
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
@@ -36,8 +36,6 @@ def my_loot(request):
     # we use our own session key because was having
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
-
-  print 'wtf', request.session['anon_key']
 
   if request.user.is_authenticated():
     pins = Pin.objects.filter(user=request.user)
@@ -157,17 +155,27 @@ def remove_item(request, item_type, item_id):
 # TODO move this to its own app
 # csrf reference, see https://docs.djangoproject.com/en/dev/ref/contrib/csrf/
 # auth reference, see https://docs.djangoproject.com/en/dev/topics/auth/
-def create_user(request):
+def login_or_create(request):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
+  # validation
   if 'username' not in request.POST or 'password' not in request.POST:
     return HttpResponse('bad request', status=500)
   username = request.POST['username']
   password = request.POST['password']
+  if not request.POST.get('remember_me', None):
+    request.session.set_expiry(0)
 
+  # Add user if applicable, then login
   user = authenticate(username=username, password=password)
   if user is None:
-    # create the user, then log them in
+    # New user - create and transfer the pinz to them
     User.objects.create_user(username, '', password)
     user = authenticate(username=username, password=password)
+    convert_session_to_user(request, user)
     print 'User', username, 'created'
   return login_user(request, user)
 
@@ -175,12 +183,21 @@ def login_user(request, user):
     if user.is_active:
       login(request, user)
       print 'User', user.username, 'logged in'
-      return HttpResponse(status=200)
+      response = {'success': True}
+      return HttpResponse(json.dumps(response), mimetype="application/json")
     else:
-      return HttpResponse('user deactivated', status=200)
+      response = {'success': False, 'reason': 'User deactivated'}
+      return HttpResponse(json.dumps(response), mimetype="application/json")
 
-def convert_session_to_user():
-  pass
+def convert_session_to_user(request, user):
+  pins = Pin.objects.filter(session=request.session['anon_key'], user__isnull=True)
+  for pin in pins:
+    pin.user = user
+    pin.save()
+
+def logout_user(request):
+  logout(request)
+  return HttpResponse("You've been logged out.")
 
 def random_string(n):
   return ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for x in range(n))

@@ -5,7 +5,7 @@
 {% block toptext %}
 {% if not user.is_authenticated and items|length > 0 %}
 <div class="login-plea">
-You are not logged in.  Save your gear by <a href="#">logging in</a> or <a href="#">registering</a>.
+You are not logged in.  Save your gear by <a href="#" class="js-login">logging in</a> or <a href="#" class="js-login">registering</a>.
 </div>
 {% endif %}
 

@@ -85,13 +85,15 @@
         <h3 id="login-register-label">Login or Register</h3>
       </div>
       <div class="modal-body">
+        <form class="form form-inline">
           <input id="login-register-username" type="text" class="input-small" placeholder="Username">
           <input id="login-register-password" type="password" class="input-small" placeholder="Password">
           {% csrf_token %}
           <label class="checkbox">
-            <input type="checkbox" checked> Remember me
+            <input id="login-register-remember-me" type="checkbox" checked> Remember me
           </label>
-          <button type="submit" class="btn submit">Sign in/Register</button>
+          <a href="#" class="btn submit">Sign in/Register</a>
+        </form>
       </div>
     </div>
     {% endblock %}
