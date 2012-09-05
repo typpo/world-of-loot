@@ -139,16 +139,11 @@ function AuthManager() {
 
     // Login/register button
     $('#login-register-modal a.submit').on('click', function() {
-      $.post('/login_or_create/', {
-        username: $('#login-register-username').val(),
-        password: $('#login-register-password').val(),
-        remember_me: $('#login-register-remember-me').prop('checked') ? true : false
-      }, function(data) {
-        if (data && data.success)
-          window.location.reload()
-        else
-          alert('Login failed.  Reason: ' + data.reason);
-      }, 'json');
+      me.Login(
+        $('#login-register-username').val(),
+        $('#login-register-password').val(),
+        $('#login-register-remember-me').prop('checked') ? true : false
+      );
       return false;
     });
 
@@ -161,10 +156,20 @@ function AuthManager() {
 
   this.ShowLogin = function() {
     $('#login-register-modal').modal();
+    $('#login-register-username').focus();
   }
 
-  this.Login = function(username, password) {
-
+  this.Login = function(username, password, remember) {
+    $.post('/login_or_create/', {
+      username: username,
+      password: password,
+      remember_me: remember
+    }, function(data) {
+      if (data && data.success)
+        window.location.reload()
+      else
+        alert('Login failed.  Reason: ' + data.reason);
+    }, 'json');
   }
 }
 

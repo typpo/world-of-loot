@@ -43,11 +43,12 @@
               <li><a href="#about">About</a></li>
               {% if user.is_authenticated %}
               <li><a href="#">Logged in as {{ user.username }}.</a></li>
+              <li><a href="/logout">Logout</a></li>
               {% endif %}
             </ul>
             <ul class="nav pull-right">
-              <li class="active"><a href="#">Sign In</a></li>
-              <li class="active"><a href="#">Register</a></li>
+              <li class="active"><a href="#" class="js-login">Sign In</a></li>
+              <li class="active"><a href="#" class="js-login">Register</a></li>
             </ul>
             <!--
             <form class="navbar-form pull-right">
