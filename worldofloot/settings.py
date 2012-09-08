@@ -1,5 +1,9 @@
 import os
 
+# heroku
+import dj_database_url
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
