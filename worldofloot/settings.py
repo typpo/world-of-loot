@@ -15,17 +15,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'worldofloot',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
-
 # Registration settings
 ACCOUNT_ACTIVATION_DAYS=14
 
@@ -142,6 +131,8 @@ PASSWORD_HASHERS = (
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
+BROKER_BACKEND = 'django' # for celery/heroku
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,6 +147,7 @@ INSTALLED_APPS = (
     'main',
     'taggit',
     'south',
+    'gunicorn',
 
     #'allauth',
     #'allauth.account',
@@ -170,3 +162,4 @@ try:
   from local_settings import *
 except ImportError:
   pass
+
