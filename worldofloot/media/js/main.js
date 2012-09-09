@@ -200,7 +200,7 @@ $(function() {
   });
 
   $('div .pins a.image-box').fancybox({
-
+    nextClick: true,
     beforeLoad: function() {
       var el, id = $(this.element).data('title-id');
       if (id) {

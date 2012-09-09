@@ -82,6 +82,17 @@ CACHES = {
     }
 }
 
+# message config
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {
+  message_constants.DEBUG: 'debug',
+  message_constants.INFO: 'alert-info',
+  message_constants.SUCCESS: 'alert-success',
+  message_constants.WARNING: 'alert-warning',
+  message_constants.ERROR: 'alert-error',
+}
+
+
 ROOT_URLCONF = 'worldofloot.urls'
 
 TEMPLATE_DIRS = (
@@ -96,7 +107,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
-    "django.core.context_processors.csrf",
+    'django.core.context_processors.csrf',
+    'django.contrib.messages.context_processors.messages',
 )
 
 AUTHENTICATION_BACKENDS = (

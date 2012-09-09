@@ -125,6 +125,10 @@ body {
   color: #ccc;
 }
 
+.fancybox-skin h3 {
+  line-height: 1.1em;
+}
+
 .comments {
 
 }

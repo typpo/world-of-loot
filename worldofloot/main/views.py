@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
@@ -34,13 +35,12 @@ def recent(request):
   })
 
 def popular(request):
-  # TODO exclude items that aren't pinned by anyone
   pins = Pin.objects.order_by('-created')
   items = set()
   comments_by_item = {}
   for pin in pins:
     comments_by_item.setdefault(pin.item, [])
-    if pin.item.comment and len(pin.item.comments) > 0:
+    if pin.comment and len(pin.comment) > 0:
       comment_user = pin.user.username if pin.user else 'anonymous'
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.add(pin.item)
@@ -166,6 +166,10 @@ def add_item(request, item_type, item_id, verb):
       item.haves += 1
     item.save()
 
+  # display sucesss message
+  messages.add_message(request, messages.SUCCESS, 'Your item was added.')
+
+  # build json response
   response = {'success': True, 'already_have': already_have}
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
@@ -181,6 +185,9 @@ def remove_item(request, item_type, item_id):
     Pin.objects.filter(user=request.user, item=item).delete()
   else:
     Pin.objects.filter(session=request.session['anon_key'], item=item).delete()
+
+  # display sucesss message
+  messages.add_message(request, messages.SUCCESS, 'Your item was removed.')
 
   return HttpResponse(status=200)
 

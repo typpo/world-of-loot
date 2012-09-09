@@ -9,6 +9,19 @@
 </div>
 {% endblock %}
 
+{% block messages %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div class="alert {{message.tags}}">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
+
 <div class="tabs">
   <ul>
     <li{% if tab == 'recent' %} class="active"{%endif%}><h4><a href="/recent">Just Added</a></h4></li>
