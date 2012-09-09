@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('worldofloot.main.views',
     url(r'^$', 'index', name='index'),
+    url(r'^about/', 'about', name='about'),
     url(r'^my/', 'my_loot', name='my_loot'),
     url(r'^recent/', 'recent', name='recent'),
     url(r'^popular/', 'popular', name='popular'),

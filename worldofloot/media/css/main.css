@@ -129,6 +129,14 @@ body {
   line-height: 1.1em;
 }
 
+.fancybox-skin .attribution {
+  position: absolute;
+  right: 4px;
+  float: right;
+  top: -20px;
+
+}
+
 .quick-message {
   width: 200px;
   background-color: #fff;

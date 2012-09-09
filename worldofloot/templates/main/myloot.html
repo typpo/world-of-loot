@@ -36,8 +36,13 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
     <img src="{{ item.image.path }}" border="1" />
     </a>
     <div id="title-{{forloop.counter}}" style="display:none;">
+      <div class="attribution">
+      photo by <a href="http://www.wowhead.com/user={{ item.image.attribution }}" target="_blank">{{ item.image.attribution }}</a> of <a href="http://wowhead.com" target="_blank">wowhead</a>
+      </div>
       <h3>
-        <strong>{{ item.name }}</strong> -
+        <strong>{{ item.name }}</strong>
+      </h3>
+      <h3>
       {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
       {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
       </h3>

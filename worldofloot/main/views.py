@@ -15,6 +15,9 @@ from worldofloot.main.models import Image
 def index(request):
   return recent(request)
 
+def about(request):
+  return render(request, 'main/about.html', {})
+
 def recent(request):
   items = []
   pins = Pin.objects.order_by('-created')
