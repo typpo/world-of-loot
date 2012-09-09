@@ -150,7 +150,7 @@ body {
   width: 200px;
   margin-top: -50px;
   margin-left: -100px;
-  z-index: 999;
+  z-index: 9001;
   -moz-border-radius:12px; -webkit-border-radius:12px;
 }
 

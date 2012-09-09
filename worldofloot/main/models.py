@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User)
@@ -22,6 +23,8 @@ class Item(models.Model):
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
+
+  tags = TaggableManager()
 
   def __unicode__(self):
     return 'Item %s (%s, %s)' % (self.name, self.item_id, self.item_type)

@@ -19,19 +19,19 @@ def scrape_item(id, item_type):
     slot = xml.find('item/inventorySlot').text
 
     print name, ilvl, quality, icon, slot
-    item = Item(item_id=id, item_type=item_type, name=name,
+    item = Item.objects.create(item_id=id, item_type=item_type, name=name,
         ilvl=ilvl, quality=quality, icon=icon, slot=slot)
     print slot, quality
-    #item.set_tags([slot, quality])
+    item.tags.add(slot, quality)
   else:
     # a mount or spell or set
     name_regex = re.compile('\<meta property="og:title" content="(.*?)" /\>')
     m = name_regex.search(html)
     name = m.group(1)
     print 'Non-item', name, item_type
-    item = Item(item_id=id, item_type=item_type, name=name)
+    item = Item.objects.create(item_id=id, item_type=item_type, name=name)
     print item_type
-    #item.set_tags([item_type])
+    item.tags.add(item_type)
 
   # commit to db
   item.save()

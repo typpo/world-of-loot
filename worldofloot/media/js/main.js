@@ -64,7 +64,7 @@ function AddItemModal() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
         'want', comment, function(err, success) {
         if (err) {
-          showMessage("You already did this!");
+          showMessage("You already did that!");
           return;
         }
         showMessage("This item has been added to your wishlist.");
@@ -231,6 +231,11 @@ $(function() {
 
   window.auth_manager = new AuthManager();
   auth_manager.Init();
+
+  $('#quick-message-dialog-hide').on('click', function() {
+    $('#quick-message-dialog').hide();
+    return false;
+  });
 });
 
 function showMessage(msg) {
