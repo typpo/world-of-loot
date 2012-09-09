@@ -129,6 +129,25 @@ body {
   line-height: 1.1em;
 }
 
-.comments {
+.quick-message {
+  width: 200px;
+  background-color: #fff;
+  color: #404040;
+  font-weight: bold;
+  text-align: center;
+  padding: 25px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  margin-top: -50px;
+  margin-left: -100px;
+  z-index: 999;
+  -moz-border-radius:12px; -webkit-border-radius:12px;
+}
+
+.quick-message a {
+  color: #404040;
+  text-decoration: underline;
 
 }

@@ -16,7 +16,7 @@ def index(request):
   return recent(request)
 
 def recent(request):
-  items = set()
+  items = []
   pins = Pin.objects.order_by('-created')
   comments_by_item = {}
   for pin in pins:
@@ -24,10 +24,10 @@ def recent(request):
     if pin.comment and len(pin.comment) > 0:
       comment_user = pin.user.username if pin.user else 'anonymous'
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
-    items.add(pin.item)
+    items.append(pin.item)
 
   #items = Item.objects.order_by('-created')
-  template_items = set_images_for_items(items)
+  template_items = set_images_for_items(uniq(items))
   return render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
@@ -35,16 +35,16 @@ def recent(request):
   })
 
 def popular(request):
-  pins = Pin.objects.order_by('-created')
-  items = set()
+  pins = Pin.objects.order_by('-item__wants')
+  items = []
   comments_by_item = {}
   for pin in pins:
     comments_by_item.setdefault(pin.item, [])
     if pin.comment and len(pin.comment) > 0:
       comment_user = pin.user.username if pin.user else 'anonymous'
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
-    items.add(pin.item)
-  template_items = set_images_for_items(items)
+    items.append(pin.item)
+  template_items = set_images_for_items(uniq(items))
   return render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
@@ -64,7 +64,7 @@ def my_loot(request):
     pins = Pin.objects.filter(session=request.session['anon_key'], user__isnull=True)
 
   # TODO get items from pins and use set_images_for_items
-  items = set()
+  items = []
   comments_by_item = {}
   for pin in pins:
     item = pin.item
@@ -79,7 +79,9 @@ def my_loot(request):
     images = item.image_set.order_by('priority')
     if len(images) > 0:
       item.image = images[0]
-    items.add(item)
+    items.append(item)
+
+  items = uniq(items)
 
   return render(request, 'main/myloot.html', {
     'items': items,
@@ -166,9 +168,6 @@ def add_item(request, item_type, item_id, verb):
       item.haves += 1
     item.save()
 
-  # display sucesss message
-  messages.add_message(request, messages.SUCCESS, 'Your item was added.')
-
   # build json response
   response = {'success': True, 'already_have': already_have}
   return HttpResponse(json.dumps(response), mimetype="application/json")
@@ -185,9 +184,6 @@ def remove_item(request, item_type, item_id):
     Pin.objects.filter(user=request.user, item=item).delete()
   else:
     Pin.objects.filter(session=request.session['anon_key'], item=item).delete()
-
-  # display sucesss message
-  messages.add_message(request, messages.SUCCESS, 'Your item was removed.')
 
   return HttpResponse(status=200)
 
@@ -249,3 +245,10 @@ def set_images_for_items(items):
       item.image = images[0]
     ret.append(item)
   return ret
+
+# dedupes a list but keeps order
+# http://stackoverflow.com/questions/480214/how-do-you-remove-duplicates-from-a-list-in-python-whilst-preserving-order
+def uniq(seq):
+  seen = set()
+  seen_add = seen.add
+  return [ x for x in seq if x not in seen and not seen_add(x)]

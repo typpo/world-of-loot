@@ -64,10 +64,10 @@ function AddItemModal() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
         'want', comment, function(err, success) {
         if (err) {
-          alert("You already did this!");
+          showMessage("You already did this!");
           return;
         }
-        alert("This item has been added to your loot wishlist.");
+        showMessage("This item has been added to your wishlist.");
         //window.location.reload();  // TODO maybe no refresh
         return false;
       });
@@ -79,10 +79,10 @@ function AddItemModal() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
         'have', comment, function(err, success) {
         if (err) {
-          alert("You already did this!");
+          showMessage("You already did this!");
           return;
         }
-        alert("This item has been added to your loot.");
+        showMessage("This item has been added to your loot.");
         //window.location.reload();  // TODO maybe no refresh
         return false;
       });
@@ -232,3 +232,12 @@ $(function() {
   window.auth_manager = new AuthManager();
   auth_manager.Init();
 });
+
+function showMessage(msg) {
+  var $e = $('#quick-message-dialog');
+  $e.find('span').text(msg);
+  $e.show();
+  setTimeout(function() {
+    $e.fadeOut()
+  }, 2000);
+}
