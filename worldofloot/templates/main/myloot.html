@@ -44,7 +44,7 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
 
       <div class="comments">
         {% for comment in comments_by_item|lookup:item %}
-        <em>{% if comment.user %}{{ comment.user }}{% else %}anonymous{%endif%}</em>: {{ comment.comment }}.<br>
+        <em>{% if comment.user %}{{ comment.user }}{% else %}anonymous{%endif%}</em> says: {{ comment.comment }}.<br>
         {% endfor %}
       </div>
     </div>

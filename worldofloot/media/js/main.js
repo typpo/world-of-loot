@@ -60,8 +60,9 @@ function AddItemModal() {
 
     // Wants
     $(document).on('click', '.js-item-want', function() {
+      var comment = prompt("Add a comment (or leave it blank)");
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
-        'want', null, function(err, success) {
+        'want', comment, function(err, success) {
         if (err) {
           alert("You already did this!");
           return;
@@ -74,8 +75,9 @@ function AddItemModal() {
 
     // Haves
     $(document).on('click', '.js-item-have', function() {
+      var comment = prompt("Add a comment (or leave it blank)");
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
-        'have', null, function(err, success) {
+        'have', comment, function(err, success) {
         if (err) {
           alert("You already did this!");
           return;
