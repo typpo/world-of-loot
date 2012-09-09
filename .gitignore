@@ -6,9 +6,11 @@
 *.rdb
 bootstrap
 venv
-worldofloot/autocomplete/data
 bin
 lib
 src
 include
 .Python
+
+worldofloot/autocomplete/data
+worldofloot/local_settings.py

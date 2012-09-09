@@ -1,5 +1,7 @@
 {% extends "main/lootview.html" %}
 
+{% load main_extras %}
+
 {% block hero %}{% endblock %}
 
 {% block toptext %}
@@ -11,7 +13,7 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
 
 {% if items|length > 0 %}
 <div class="add-loot">
-<a href="#" class="btn js-add-pin">+ Add another</a>
+<a href="#" class="btn js-add-pin">+ Add an Item</a>
 </div>
 {% endif %}
 
@@ -27,14 +29,31 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
 {% block pins %}
 {% for item in items %}
   <div class="pin">
+    {% if tab == 'my_loot' %}
     <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
-    <img src="{{ item.image.path }}" />
+    {% endif %}
+    <a href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
+    <img src="{{ item.image.path }}" border="1" />
+    </a>
+    <div id="title-{{forloop.counter}}" style="display:none;">
+      <h3>
+        <strong>{{ item.name }}</strong> -
+      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
+      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
+      </h3>
+
+      <div class="comments">
+        {% for comment in comments_by_item|lookup:item %}
+        <em>{% if comment.user %}{{ comment.user }}{% else %}anonymous{%endif%}</em>: {{ comment.comment }}.<br>
+        {% endfor %}
+      </div>
+    </div>
     <p>
     <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
     </p>
     <span class="details">
       {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
-      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>,
+      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
     </span>
     </a>
   </div>
@@ -50,8 +69,24 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
     <h3 id="add-item-label">Add gear or a mount</h3>
   </div>
   <div class="modal-body">
-    <form>
-      <input id="add-item-id" type="text" placeholder="">
+    <form class="form form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="add-item-id">
+          <strong>Item or mount name:</strong>
+        </label>
+        <div class="controls">
+          <input id="add-item-id" type="text" placeholder="">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="add-item-comment">
+          Comment (optional):
+        </label>
+        <div class="controls">
+          <input id="add-item-comment" type="text" placeholder="">
+        </div>
+      </div>
     </form>
     <div id="add-item-loader" style="display:none;">
       <img src="/media/images/loader.gif"/>

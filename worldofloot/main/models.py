@@ -24,7 +24,7 @@ class Item(models.Model):
   modified = models.DateTimeField(auto_now=True)
 
   def __unicode__(self):
-    return 'Item %s' % (self.name)
+    return 'Item %s (%s, %s)' % (self.name, self.item_id, self.item_type)
 
 class Pin(models.Model):
   item = models.ForeignKey(Item)
@@ -32,11 +32,13 @@ class Pin(models.Model):
   session = models.CharField(max_length=60, null=True)
   verb = models.CharField(max_length=10) # TODO convert to select
 
+  comment = models.CharField(max_length=200, null=True)
+
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
 
   def __unicode__(self):
-    return 'Pin of %s by %s' % (self.item.name, self.user.email)
+    return 'Pin of %s: %s' % (self.item.name, self.comment)
 
 class Image(models.Model):
   item = models.ForeignKey(Item)

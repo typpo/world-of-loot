@@ -32,7 +32,7 @@ function AddItemModal() {
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
-      me.AddItem(me.id, me.type, 'want', function(err, success) {
+      me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, success) {
         if (err) {
           return;
         }
@@ -59,26 +59,30 @@ function AddItemModal() {
     });
 
     // Wants
-    $('.js-item-want').on('click', function() {
+    $(document).on('click', '.js-item-want', function() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
-        'want', function(err, success) {
+        'want', null, function(err, success) {
         if (err) {
           alert("You already did this!");
           return;
         }
-        window.location.reload();  // TODO maybe no refresh
+        alert("This item has been added to your loot wishlist.");
+        //window.location.reload();  // TODO maybe no refresh
+        return false;
       });
     });
 
     // Haves
-    $('.js-item-have').on('click', function() {
+    $(document).on('click', '.js-item-have', function() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
-        'have', function(err, success) {
+        'have', null, function(err, success) {
         if (err) {
           alert("You already did this!");
           return;
         }
-        window.location.reload();  // TODO maybe no refresh
+        alert("This item has been added to your loot.");
+        //window.location.reload();  // TODO maybe no refresh
+        return false;
       });
     });
   }
@@ -106,10 +110,13 @@ function AddItemModal() {
     });
   }
 
-  this.AddItem = function(id, type, verb, callback) {
+  this.AddItem = function(id, type, verb, comment, callback) {
+    // TODO turn into options
     // TODO this belongs in a general function, not just additemmodal
     // TODO some sort of loader
-    $.get('/add/' + type + '/' + id + '/' + verb, function(data) {
+    $.post('/add/' + type + '/' + id + '/' + verb, {
+      comment: comment
+    }, function(data) {
       if (data.already_have) {
         callback(true, null);
       }
@@ -176,6 +183,7 @@ function AuthManager() {
 $(function() {
   var $handler = $('#pins .pin');
   $handler.imagesLoaded(function() {
+    // Pin layout
     $handler.wookmark({
       offset: 10,
       itemWidth: 260,
@@ -187,6 +195,33 @@ $(function() {
       columnWidth: 300,
     });
     */
+  });
+
+  $('div .pins a.image-box').fancybox({
+
+    beforeLoad: function() {
+      var el, id = $(this.element).data('title-id');
+      if (id) {
+        el = $('#' + id);
+        if (el.length) {
+          this.title = el.html();
+        }
+      }
+    },
+    helpers : {
+      title : {
+        type: 'inside'
+      },
+      overlay : {
+        css : {
+          'background' : 'rgba(0, 0, 0, 0.85)'
+        }
+      },
+      thumbs : {
+        width: 50,
+        height: 50
+      }
+    }
   });
 
   var add_modal = new AddItemModal();

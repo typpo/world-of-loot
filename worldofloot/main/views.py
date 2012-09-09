@@ -15,19 +15,40 @@ def index(request):
   return recent(request)
 
 def recent(request):
-  items = Item.objects.order_by('-created')
+  items = set()
+  pins = Pin.objects.order_by('-created')
+  comments_by_item = {}
+  for pin in pins:
+    comments_by_item.setdefault(pin.item, [])
+    if pin.comment and len(pin.comment) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+    items.add(pin.item)
+
+  #items = Item.objects.order_by('-created')
   template_items = set_images_for_items(items)
   return render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
+    'comments_by_item': comments_by_item,
   })
 
 def popular(request):
-  items = Item.objects.order_by('-wants')
+  # TODO exclude items that aren't pinned by anyone
+  pins = Pin.objects.order_by('-created')
+  items = set()
+  comments_by_item = {}
+  for pin in pins:
+    comments_by_item.setdefault(pin.item, [])
+    if pin.item.comment and len(pin.item.comments) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+    items.add(pin.item)
   template_items = set_images_for_items(items)
   return render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
+    'comments_by_item': comments_by_item,
   })
 
 def my_loot(request):
@@ -43,18 +64,27 @@ def my_loot(request):
     pins = Pin.objects.filter(session=request.session['anon_key'], user__isnull=True)
 
   # TODO get items from pins and use set_images_for_items
-  items = []
+  items = set()
+  comments_by_item = {}
   for pin in pins:
     item = pin.item
+
+    # Add comment
+    comments_by_item.setdefault(item, [])
+    if pin.comment and len(pin.comment) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+
+    # Choose images
     images = item.image_set.order_by('priority')
     if len(images) > 0:
       item.image = images[0]
-    items.append(item)
+    items.add(item)
 
   return render(request, 'main/myloot.html', {
     'items': items,
     'tab': 'my_loot',
-
+    'comments_by_item': comments_by_item,
   })
 
 def get_item_info(request, item_type, item_id):
@@ -107,7 +137,8 @@ def add_item(request, item_type, item_id, verb):
         pin.verb = verb
         pin.save()
     except Pin.DoesNotExist:
-      pin = Pin(item=item, user=request.user)
+      pin = Pin(item=item, user=request.user, \
+          comment=request.POST.get('comment', None).strip()[:199])
       pin.save()
       increment_item_verb = True
   else:
@@ -123,7 +154,8 @@ def add_item(request, item_type, item_id, verb):
         pin.verb = verb
         pin.save()
     except Pin.DoesNotExist:
-      pin = Pin(item=item, session=request.session['anon_key'])
+      pin = Pin(item=item, session=request.session['anon_key'], \
+          comment=request.POST.get('comment', None).strip()[:199])
       pin.save()
       increment_item_verb = True
 
