@@ -109,6 +109,7 @@ def get_item_info(request, item_type, item_id):
   for image in Image.objects.filter(item=item).order_by('priority'):
     response['images'].append(image.path)
 
+  # TODO handle no images found
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 

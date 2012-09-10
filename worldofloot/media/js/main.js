@@ -102,9 +102,10 @@ function AddItemModal() {
         return;
       }
 
+      var imgpath = data.images.length > 0 ? data.images[0] : '/media/images/unavailable.png';
       $('#add-item-image-container').html('<a href="#" rel="'
         + type + '=' + id + '"><h3>' + data.name
-        + '</h3><img src="' + data.images[0] + '"/></a>');
+        + '</h3><img src="' + imgpath + '"/></a>');
 
       $('#add-item button').removeClass('disabled');
       me.id = id;
@@ -210,6 +211,7 @@ $(function() {
 
   $('div .pins a.image-box').fancybox({
     nextClick: true,
+    midWidth: 500,
     beforeLoad: function() {
       var el, id = $(this.element).data('title-id');
       if (id) {
