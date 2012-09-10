@@ -19,19 +19,18 @@ def scrape_item(id, item_type):
     slot = xml.find('item/inventorySlot').text
 
     print name, ilvl, quality, icon, slot
-    item = Item.objects.create(item_id=id, item_type=item_type, name=name,
+    item = Item(item_id=id, item_type=item_type, name=name,
         ilvl=ilvl, quality=quality, icon=icon, slot=slot)
     print slot, quality
-    item.tags.add(slot, quality)
+    #item.tags.add(slot, quality)
   else:
     # a mount or spell or set
     name_regex = re.compile('\<meta property="og:title" content="(.*?)" /\>')
     m = name_regex.search(html)
     name = m.group(1)
     print 'Non-item', name, item_type
-    item = Item.objects.create(item_id=id, item_type=item_type, name=name)
-    print item_type
-    item.tags.add(item_type)
+    item = Item(item_id=id, item_type=item_type, name=name)
+    #item.tags.add(item_type)
 
   # commit to db
   item.save()
@@ -40,6 +39,7 @@ def scrape_item(id, item_type):
   image_regex = re.compile("{id:(\d+),user:'(.*?)'(.*?)}")
   image_count = 0
   images = []
+  print item_type, id
   for m in image_regex.finditer(html):
     image_id = m.group(1)
     attribution = m.group(2)

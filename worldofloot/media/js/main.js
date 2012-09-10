@@ -191,10 +191,13 @@ $(function() {
       itemWidth: 260,
       autoResize: true,
     });
+
+    $('#main-page-loader').hide();
+    $('#pins').css('visibility', 'visible');
     /*
     $handler.masonry({
       itemSelector: '.pin',
-      columnWidth: 300,
+      columnWidth: 280,
     });
     */
   });
@@ -235,6 +238,23 @@ $(function() {
   $('#quick-message-dialog-hide').on('click', function() {
     $('#quick-message-dialog').hide();
     return false;
+  });
+
+  $('#items-filter').on('keyup', function() {
+    var q = $.trim($(this).val()).toLowerCase();
+    if (q == '') {
+      $('.pin').show();
+      return;
+    }
+
+    $('.pin').each(function() {
+      if (~$(this).data('item-name').indexOf(q)) {
+        $(this).show();
+      }
+      else {
+        $(this).hide();
+      }
+    });
   });
 });
 

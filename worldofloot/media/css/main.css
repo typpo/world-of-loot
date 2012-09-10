@@ -3,6 +3,13 @@ body {
   padding-bottom: 40px;
 }
 
+.main-page-loader {
+  position: fixed;
+  top: 300px;
+  left: 50%;
+  margin-left: -50px;
+}
+
 .well {
   margin-bottom: 10px;
 }
@@ -34,7 +41,6 @@ body {
   top: 55px;
   left: 0;
   position: relative;
-  background: #eee;
   z-index: 100;
 }
 
@@ -44,6 +50,7 @@ body {
   float: left;
   border: 1px solid #ccc;
   padding: 5px;
+  /*margin-bottom: 12px;*/
 }
 
 .pin img {
@@ -157,5 +164,4 @@ body {
 .quick-message a {
   color: #404040;
   text-decoration: underline;
-
 }
