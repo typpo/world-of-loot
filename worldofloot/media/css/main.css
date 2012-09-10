@@ -38,10 +38,10 @@ body {
 }
 
 .pins {
-  top: 55px;
+  top: 48px;
   left: 0;
   position: relative;
-  z-index: 100;
+  margin: 0 auto;
 }
 
 .pin {
@@ -50,7 +50,7 @@ body {
   float: left;
   border: 1px solid #ccc;
   padding: 5px;
-  /*margin-bottom: 12px;*/
+  margin-bottom: 8px;
 }
 
 .pin img {
@@ -80,8 +80,8 @@ body {
 .pin .delete-pin {
   float:right;
   position: absolute;
-  top: 0;
-  right: 4px;
+  top: -3px;
+  right: 2px;
   font-size: 18px;
   color: #aaa;
 }
@@ -101,9 +101,17 @@ body {
   text-decoration: underline;
 }
 
-.add-loot {
+.user-operations {
+  position: relative;
   float: right;
+  right: 101px;
   margin-top: 8px;
+}
+
+.stats {
+  position: relative;
+  float: left;
+  display: inline;
 }
 
 .nothing-saved {
@@ -130,6 +138,15 @@ body {
 .fancybox-skin {
   background-color: #404040;
   color: #ccc;
+}
+
+.fancybox-skin .wants-and-haves a {
+  text-decoration: underline;
+}
+
+.fancybox-skin .wants-and-haves a:hover {
+  text-decoration: underline;
+  color: #80B89E;
 }
 
 .fancybox-skin h3 {

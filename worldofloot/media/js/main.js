@@ -43,10 +43,11 @@ function AddItemModal() {
     });
 
     // Show modal dialog
-    $('a.js-add-pin').on('click', function() {
+    $('a.js-add-pin, button.js-add-pin').on('click', function() {
       $('#add-item-image-container').empty();
       $('#add-item').modal();
       $('#add-item-id').val('').focus()
+      return false;
     });
 
     // Pin deletion
@@ -64,7 +65,7 @@ function AddItemModal() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
         'want', comment, function(err, success) {
         if (err) {
-          showMessage("You already did that!");
+          showMessage("You already added this!");
           return;
         }
         showMessage("This item has been added to your wishlist.");
@@ -79,7 +80,7 @@ function AddItemModal() {
       me.AddItem($(this).data('item-id'), $(this).data('item-type'),
         'have', comment, function(err, success) {
         if (err) {
-          showMessage("You already did this!");
+          showMessage("You already added this!");
           return;
         }
         showMessage("This item has been added to your loot.");
@@ -183,23 +184,28 @@ function AuthManager() {
 }
 
 $(function() {
-  var $handler = $('#pins .pin');
+  var $handler = $('#pins');
   $handler.imagesLoaded(function() {
     // Pin layout
+    /*
     $handler.wookmark({
       offset: 10,
       itemWidth: 260,
       autoResize: true,
     });
+    */
+
+    $handler.masonry({
+      itemSelector: '.pin',
+      columnWidth: 269,
+      isFitWidth: true,
+    });
 
     $('#main-page-loader').hide();
     $('#pins').css('visibility', 'visible');
-    /*
-    $handler.masonry({
-      itemSelector: '.pin',
-      columnWidth: 280,
-    });
-    */
+    // after layout is done, align search, add item, etc. with pins container
+    var right_offset = $(window).width() - ($handler.offset().left + $handler.outerWidth());
+    $('#user-operations').css('right', right_offset);
   });
 
   $('div .pins a.image-box').fancybox({

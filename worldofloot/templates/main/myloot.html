@@ -7,14 +7,19 @@
 {% block toptext %}
 {% if not user.is_authenticated and items|length > 0 %}
 <div class="login-plea">
-You are not logged in.  Save your gear by <a href="#" class="js-login">logging in</a> or <a href="#" class="js-login">registering</a>.
+You are not logged in.  Choose & save your gear by <a href="#" class="js-login">logging in</a> or <a href="#" class="js-login">registering</a>.
 </div>
 {% endif %}
 
 {% if items|length > 0 %}
-<div class="add-loot">
-<input id="items-filter" type="text" placeholder="search" />
-<a href="#" class="btn js-add-pin">+ Add an Item</a>
+<div id="stats" class="stats">
+</div>
+<div id="user-operations" class="user-operations">
+<form class="form form-inline">
+<input id="items-filter" class="input-small search-query" type="text" placeholder="filter" />
+or
+<button class="btn btn-success js-add-pin">+ Add an Item</a>
+</form>
 </div>
 {% endif %}
 
@@ -41,9 +46,11 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
       photo by <a href="http://www.wowhead.com/user={{ item.image.attribution }}" target="_blank">{{ item.image.attribution }}</a> of <a href="http://wowhead.com" target="_blank">wowhead</a>
       </div>
       <h3>
-        <strong>{{ item.name }}</strong>
+        <strong>
+          <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
+        </strong>
       </h3>
-      <h3>
+      <h3 class="wants-and-haves">
       {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,
       {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
       </h3>
@@ -53,7 +60,7 @@ You are not logged in.  Save your gear by <a href="#" class="js-login">logging i
         <em>{% if comment.user %}{{ comment.user }}{% else %}anonymous{%endif%}</em> says: {{ comment.comment }}.<br>
         {% endfor %}
       </div>
-    </div>
+    </div>  {# END FANCYBOX CODE #}
     <p>
     <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
     </p>
