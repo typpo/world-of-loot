@@ -72,7 +72,7 @@ function AddItemModal() {
         }
         showMessage("This item has been added to your wishlist.");
         // increment counter
-        var $wants_count = $('span .' + item_id + '-' + item_type + '-wants-count');
+        var $wants_count = $('span.' + item_id + '-' + item_type + '-wants-count');
         $wants_count.html(parseInt($wants_count.html(), 10));
         return false;
       });
@@ -91,7 +91,7 @@ function AddItemModal() {
         }
         showMessage("This item has been added to your loot.");
         // increment counter
-        var $haves_count = $('span .' + item_id + '-' + item_type + '-haves-count');
+        var $haves_count = $('span.' + item_id + '-' + item_type + '-haves-count');
         $haves_count.html(parseInt($haves_count.html(), 10));
         return false;
       });
