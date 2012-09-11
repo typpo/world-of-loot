@@ -62,7 +62,9 @@ function AddItemModal() {
     // Wants
     $(document).on('click', '.js-item-want', function() {
       var comment = prompt("Add a comment (or leave it blank)");
-      me.AddItem($(this).data('item-id'), $(this).data('item-type'),
+      var item_id = $(this).data('item-id');
+      var item_type = $(this).data('item-type');
+      me.AddItem(item_id, item_type,
         'want', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
