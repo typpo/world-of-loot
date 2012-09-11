@@ -15,8 +15,8 @@ class Item(models.Model):
   name = models.CharField(max_length=75)
   ilvl = models.IntegerField(default=-1)
   quality = models.CharField(max_length=20, null=True) # TODO convert to select
-  icon = models.CharField(max_length=20, null=True)
-  slot = models.CharField(max_length=20, null=True) # TODO convert to select
+  icon = models.CharField(max_length=75, null=True)
+  slot = models.CharField(max_length=25, null=True) # TODO convert to select
 
   wants = models.IntegerField(default=0)
   haves = models.IntegerField(default=0)
