@@ -58,8 +58,14 @@ or
         </strong>
       </h3>
       <h3 class="wants-and-haves">
-      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
-      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
+        <span class="{{ item.item_id }}-{{ item.item_type }}-wants-count">
+          {{ item.wants }}
+        </span>
+         people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
+        <span class="{{ item.item_id }}-{{ item.item_type }}-haves-count">
+          {{ item.haves }}
+        </span>
+         people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
       </h3>
 
       <div class="comments">
@@ -72,8 +78,14 @@ or
     <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
     </p>
     <span class="details">
-      {{ item.wants }} people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
-      {{ item.haves }} people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
+        <span class="{{ item.item_id }}-{{ item.item_type }}-wants-count">
+          {{ item.wants }}
+        </span>
+         people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
+        <span class="{{ item.item_id }}-{{ item.item_type }}-haves-count">
+          {{ item.haves }}
+        </span>
+         people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
     </span>
     </a>
   </div>

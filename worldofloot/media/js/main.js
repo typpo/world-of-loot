@@ -66,10 +66,12 @@ function AddItemModal() {
         'want', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
-          return;
+          return false;
         }
         showMessage("This item has been added to your wishlist.");
-        //window.location.reload();  // TODO maybe no refresh
+        // increment counter
+        var $wants_count = $('span .' + item_id + '-' + item_type + '-wants-count');
+        $wants_count.html(parseInt($wants_count.html(), 10));
         return false;
       });
     });
@@ -77,14 +79,18 @@ function AddItemModal() {
     // Haves
     $(document).on('click', '.js-item-have', function() {
       var comment = prompt("Add a comment (or leave it blank)");
-      me.AddItem($(this).data('item-id'), $(this).data('item-type'),
+      var item_id = $(this).data('item-id');
+      var item_type = $(this).data('item-type');
+      me.AddItem(item_id, item_type,
         'have', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
-          return;
+          return false;
         }
         showMessage("This item has been added to your loot.");
-        //window.location.reload();  // TODO maybe no refresh
+        // increment counter
+        var $haves_count = $('span .' + item_id + '-' + item_type + '-haves-count');
+        $haves_count.html(parseInt($haves_count.html(), 10));
         return false;
       });
     });
@@ -206,7 +212,7 @@ $(function() {
     $('#pins').css('visibility', 'visible');
     // after layout is done, align search, add item, etc. with pins container
     var right_offset = $(window).width() - ($handler.offset().left + $handler.outerWidth());
-    $('#user-operations').css('right', right_offset);
+    $('#user-operations').css('right', Math.min(right_offset, 250));
   });
 
   $('div .pins a.image-box').fancybox({
