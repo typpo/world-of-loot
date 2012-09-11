@@ -19,6 +19,11 @@ def about(request):
   return render(request, 'main/about.html', {})
 
 def recent(request):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
   items = []
   pins = Pin.objects.order_by('-created')
   comments_by_item = {}
@@ -38,6 +43,11 @@ def recent(request):
   })
 
 def popular(request):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
   pins = Pin.objects.order_by('-item__wants')
   items = []
   comments_by_item = {}
@@ -114,6 +124,10 @@ def get_item_info(request, item_type, item_id):
 
 
 def add_item(request, item_type, item_id, verb):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
   if verb not in ['want', 'have']:
     return HttpResponse('bad verb', status=500)
 
