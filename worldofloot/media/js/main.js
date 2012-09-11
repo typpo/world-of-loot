@@ -68,14 +68,14 @@ function AddItemModal() {
         'want', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
-          return false;
+          return;
         }
         showMessage("This item has been added to your wishlist.");
         // increment counter
         var $wants_count = $('span.' + item_id + '-' + item_type + '-wants-count');
         $wants_count.html(parseInt($wants_count.html(), 10)+1);
-        return false;
       });
+      return false;
     });
 
     // Haves
@@ -87,14 +87,14 @@ function AddItemModal() {
         'have', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
-          return false;
+          return;
         }
         showMessage("This item has been added to your loot.");
         // increment counter
         var $haves_count = $('span.' + item_id + '-' + item_type + '-haves-count');
         $haves_count.html(parseInt($haves_count.html(), 10)+1);
-        return false;
       });
+      return false;
     });
   }
 
