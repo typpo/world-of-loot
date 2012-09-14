@@ -139,6 +139,15 @@ function AddItemModal() {
   }
 }
 
+function ItemManager() {
+  var me = this;
+
+  this.AddItemToPage = function(img, wants, haves) {
+    // TODO make me!
+
+  }
+}
+
 function AuthManager() {
   this.Init = function() {
     var me = this;
