@@ -54,10 +54,14 @@ function AddItemModal() {
 
     // Pin deletion
     $('.delete-pin').on('click', function() {
-      var type = $(this).data('item-type');
-      var id = $(this).data('item-id');
+      // TODO all this should go in itemmanager
+      var $e = $(this);
+      var type = $e.data('item-type');
+      var id = $e.data('item-id');
       $.getJSON('/remove/' + type + '/' + id, function(data) {
-        window.location.reload();
+        //window.location.reload();
+        item_manager.RemoveItemFromPage($e.parent());
+
       });
     });
 
@@ -154,6 +158,12 @@ function ItemManager() {
     $('#pins').append(pin_html);
     var $pin = $(pin_html);
     $('#pins').append($pin).masonry('appended', $pin);
+    $('#pins .pin').not('.masonry-brick').remove();
+  }
+
+  this.RemoveItemFromPage = function($e) {
+    $e.remove();
+    $('#pins').masonry('reload');
   }
 }
 
