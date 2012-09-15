@@ -45,7 +45,7 @@ function AddItemModal() {
     });
 
     // Show modal dialog
-    $('a.js-add-pin, button.js-add-pin').on('click', function() {
+    $(document).on('click', 'a.js-add-pin, button.js-add-pin', function() {
       $('#add-item-image-container').empty();
       $('#add-item').modal();
       $('#add-item-id').val('').focus()
@@ -53,7 +53,7 @@ function AddItemModal() {
     });
 
     // Pin deletion
-    $('.delete-pin').on('click', function() {
+    $(document).on('click', '.delete-pin', function() {
       // TODO all this should go in itemmanager
       var $e = $(this);
       var type = $e.data('item-type');
