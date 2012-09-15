@@ -27,11 +27,11 @@ class Item(models.Model):
 
   tags = TaggableManager()
 
-  def increment_wants():
+  def increment_wants(self):
     self.wants += 1
     self.popularity += 1
 
-  def increment_haves():
+  def increment_haves(self):
     self.haves += 1
     self.popularity += 1
 
