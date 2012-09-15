@@ -32,13 +32,15 @@ function AddItemModal() {
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
-      me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, success) {
+      me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, data) {
         if (err) {
           return;
         }
         $('#add-item').modal('hide');
         // TODO maybe don't reload because it resets scrolling
-        window.location.reload();
+        //window.location.reload();
+        console.log('calling additem');
+        item_manager.AddItemToPage(data.pin_html);
       });
     });
 
@@ -133,7 +135,7 @@ function AddItemModal() {
         callback(true, null);
       }
       else {
-        callback(null, true);
+        callback(null, data);
       }
     }, 'json');
   }
@@ -142,9 +144,16 @@ function AddItemModal() {
 function ItemManager() {
   var me = this;
 
-  this.AddItemToPage = function(img, wants, haves) {
-    // TODO make me!
+  this.Init = function() {
 
+  }
+
+  this.AddItemToPage = function(pin_html) {
+    // TODO make me!
+    //console.log('anus', pin_html);
+    $('#pins').append(pin_html);
+    var $pin = $(pin_html);
+    $('#pins').append($pin).masonry('appended', $pin);
   }
 }
 
@@ -259,6 +268,9 @@ $(function() {
 
   window.auth_manager = new AuthManager();
   auth_manager.Init();
+
+  window.item_manager = new ItemManager();
+  item_manager.Init();
 
   $('#quick-message-dialog-hide').on('click', function() {
     $('#quick-message-dialog').hide();

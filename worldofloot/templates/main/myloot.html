@@ -34,61 +34,7 @@ or
 
 {% block pins %}
 {% for item in items %}
-  <div class="pin" data-item-name="{{ item.name|lower }}">
-    {% if tab == 'my_loot' %}
-    <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
-    {% endif %}
-    {% if item.image.path %}
-      <a href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
-      <img src="{{ item.image.path }}" border="1" />
-    {% else %}
-      <a href="/media/images/unavailable.png" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
-      <img src="/media/images/unavailable.png" border="1" />
-    {% endif %}
-    </a>
-    <div id="title-{{forloop.counter}}" style="display:none;">
-      {% if item.image.path %}
-      <div class="attribution">
-      photo by <a href="http://www.wowhead.com/user={{ item.image.attribution }}" target="_blank">{{ item.image.attribution }}</a> of <a href="http://wowhead.com" target="_blank">wowhead</a>
-      </div>
-      {% endif %}
-      <h3>
-        <strong>
-          <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
-        </strong>
-      </h3>
-      <h3 class="wants-and-haves">
-        <span class="{{ item.item_id }}-{{ item.item_type }}-wants-count">
-          {{ item.wants }}
-        </span>
-         people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
-        <span class="{{ item.item_id }}-{{ item.item_type }}-haves-count">
-          {{ item.haves }}
-        </span>
-         people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
-      </h3>
-
-      <div class="comments">
-        {% for comment in comments_by_item|lookup:item %}
-        <em>{% if comment.user %}{{ comment.user }}{% else %}anonymous{%endif%}</em> says: {{ comment.comment }}.<br>
-        {% endfor %}
-      </div>
-    </div>  {# END FANCYBOX CODE #}
-    <p>
-    <a href="#" rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
-    </p>
-    <span class="details">
-        <span class="{{ item.item_id }}-{{ item.item_type }}-wants-count">
-          {{ item.wants }}
-        </span>
-         people <a href="#" class="js-item-want" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">want</a>,<wbr>
-        <span class="{{ item.item_id }}-{{ item.item_type }}-haves-count">
-          {{ item.haves }}
-        </span>
-         people <a href="#" class="js-item-have" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}">have</a>.
-    </span>
-    </a>
-  </div>
+  {% include 'main/pin.html' %}
 {% endfor %}
 {% endblock %}
 

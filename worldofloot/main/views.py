@@ -7,6 +7,8 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.template import Template, Context
+from django.template.loader import get_template
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
@@ -187,7 +189,23 @@ def add_item(request, item_type, item_id, verb):
     item.save()
 
   # build json response
-  response = {'success': True, 'already_have': already_have}
+
+  # build pin render context
+  item = set_image_for_item(item)
+  comments_by_item = {}
+  comments_by_item.setdefault(item, [])
+  if pin.comment and len(pin.comment) > 0:
+    comment_user = pin.user.username if pin.user else 'anonymous'
+    comments_by_item[item].append({'user': comment_user, 'comment': pin.comment})
+  # render pin
+  pin_html = get_template('main/pin.html').render( \
+      Context({
+        'item': item,
+        'comments_by_item': comments_by_item
+      }))
+  response = {'success': True, 'already_have': already_have, \
+      'pin_html': pin_html,
+      }
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def remove_item(request, item_type, item_id):
@@ -258,11 +276,15 @@ def random_string(n):
 def set_images_for_items(items):
   ret = []
   for item in items:
-    images = item.image_set.order_by('priority')
-    if len(images) > 0:
-      item.image = images[0]
+    item = set_image_for_item(item)
     ret.append(item)
   return ret
+
+def set_image_for_item(item):
+  images = item.image_set.order_by('priority')
+  if len(images) > 0:
+    item.image = images[0]
+  return item
 
 # dedupes a list but keeps order
 # http://stackoverflow.com/questions/480214/how-do-you-remove-duplicates-from-a-list-in-python-whilst-preserving-order
