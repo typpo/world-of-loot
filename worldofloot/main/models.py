@@ -20,11 +20,20 @@ class Item(models.Model):
 
   wants = models.IntegerField(default=0)
   haves = models.IntegerField(default=0)
+  popularity = models.IntegerField(default=0)
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
 
   tags = TaggableManager()
+
+  def increment_wants():
+    self.wants += 1
+    self.popularity += 1
+
+  def increment_haves():
+    self.haves += 1
+    self.popularity += 1
 
   def __unicode__(self):
     return 'Item %s (%s, %s)' % (self.name, self.item_id, self.item_type)

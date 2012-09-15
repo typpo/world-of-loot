@@ -50,7 +50,7 @@ def popular(request):
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
 
-  pins = Pin.objects.order_by('-item__wants')
+  pins = Pin.objects.order_by('-item__popularity')
   items = []
   comments_by_item = {}
   for pin in pins:
@@ -183,9 +183,9 @@ def add_item(request, item_type, item_id, verb):
 
   if increment_item_verb:
     if verb == 'want':
-      item.wants += 1
+      item.increment_wants()
     elif verb == 'have':
-      item.haves += 1
+      item.increment_haves()
     item.save()
 
   # build json response
