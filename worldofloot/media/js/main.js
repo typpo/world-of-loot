@@ -23,15 +23,6 @@ function AddItemModal() {
     // TODO format to use data[i].name
     });
 
-    /*
-    $('#add-item-id').on('keydown', function(e) {
-      var $submit = $('#add-item button.btn-add-item');
-      if (e.keyCode == 13 && !$submit.hasClass('disabled')) {
-        $submit.click();
-      }
-    });
-    */
-
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
       me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, data) {
@@ -201,6 +192,13 @@ function AuthManager() {
       me.ShowLogin();
       return false;
     });
+
+    // Login
+    $('#login-register-username, #login-register-password').on('keydown', function(e) {
+      if (e.keyCode == 13) {
+        $('#login-register-modal a.submit').trigger('click');
+      }
+    });
   }
 
   this.ShowLogin = function() {
@@ -209,6 +207,7 @@ function AuthManager() {
   }
 
   this.Login = function(username, password, remember) {
+    showMessage('Logging in...');
     $.post('/login_or_create/', {
       username: username,
       password: password,
