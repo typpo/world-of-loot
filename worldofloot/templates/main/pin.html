@@ -6,7 +6,7 @@
     {% endif %}
     {% if item.image.path %}
     <a id="lightbox-trigger-{{ forloop.counter }}" href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
-      <img src="{{ item.image.path }}" border="1" />
+      <img src="{{ item.image.path|toThumb }}" border="1" />
       </a>
     {% else %}
       <a id="lightbox-trigger-{{ forloop.counter }} "href="/media/images/unavailable.png" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">

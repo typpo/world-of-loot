@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+#from tasks import process_item
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User)
