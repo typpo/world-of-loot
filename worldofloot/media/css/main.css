@@ -1,5 +1,5 @@
 body {
-  padding-top: 55px;
+  padding-top: 30px;
   padding-bottom: 40px;
 }
 
@@ -14,9 +14,18 @@ body {
   margin-bottom: 10px;
 }
 
-.tabs ul {
+.fixed-top-container {
+  padding-top: 10px;
+  position: fixed;
   width: 100%;
+  z-index: 10;
+  background-color: #141414;
   border-bottom: 1px solid #ccc;
+}
+
+.tabs ul {
+  float: left;
+  display: inline;
   padding: 0;
   margin: 0;
 }
@@ -38,7 +47,7 @@ body {
 }
 
 .pins {
-  top: 48px;
+  top: 55px;
   left: 0;
   position: relative;
   margin: 0 auto;
@@ -102,11 +111,17 @@ body {
 }
 
 .user-operations {
-  position: relative;
   float: right;
-  right: 101px;
-  margin-top: 8px;
+  position: fixed;
+  right: 120px;
+  padding-bottom: 12px;
+  margin: 0;
 }
+
+.user-operations form {
+  margin: 0;
+}
+
 
 .stats {
   position: relative;

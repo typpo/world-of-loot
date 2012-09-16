@@ -32,7 +32,6 @@ function AddItemModal() {
         $('#add-item').modal('hide');
         // TODO maybe don't reload because it resets scrolling
         //window.location.reload();
-        console.log('calling additem');
         item_manager.AddItemToPage(data.pin_html);
       });
     });
