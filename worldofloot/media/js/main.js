@@ -225,18 +225,10 @@ $(function() {
   var $handler = $('#pins');
   $handler.imagesLoaded(function() {
     // Pin layout
-    /*
-    $handler.wookmark({
-      offset: 10,
-      itemWidth: 260,
-      autoResize: true,
-    });
-    */
-
     $handler.masonry({
       itemSelector: '.pin',
       columnWidth: 269,
-      isFitWidth: true,
+      isFitWidth: true
     });
 
     $('#main-page-loader').hide();
