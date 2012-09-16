@@ -21,6 +21,8 @@ body {
   z-index: 10;
   background-color: #141414;
   border-bottom: 1px solid #ccc;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .tabs ul {
@@ -103,7 +105,7 @@ body {
 
 .toptext .login-plea {
   float: left;
-
+  padding-top: 12px;
 }
 
 .toptext .login-plea a {
@@ -130,10 +132,7 @@ body {
 }
 
 .nothing-saved {
-  position: relative;
-  float: left;
-  top: 50px;
-  left: 10px;
+  text-align: center;
 }
 
 .nothing-saved a {
