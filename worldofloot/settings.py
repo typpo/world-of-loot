@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'taggit',
     'south',
     'gunicorn',
+    'djsupervisor',
 
     #'allauth',
     #'allauth.account',
