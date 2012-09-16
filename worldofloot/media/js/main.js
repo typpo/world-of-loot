@@ -23,12 +23,14 @@ function AddItemModal() {
     // TODO format to use data[i].name
     });
 
+    /*
     $('#add-item-id').on('keydown', function(e) {
       var $submit = $('#add-item button.btn-add-item');
       if (e.keyCode == 13 && !$submit.hasClass('disabled')) {
         $submit.click();
       }
     });
+    */
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
