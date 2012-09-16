@@ -273,6 +273,11 @@ $(function() {
     }
   });
 
+  $(document).on('click', 'a.js-open-corresponding-lightbox', function() {
+    $('#lightbox-trigger-' + $(this).data('lightbox-id')).trigger('click');
+    return false;
+  });
+
   var add_modal = new AddItemModal();
   add_modal.Init();
 
