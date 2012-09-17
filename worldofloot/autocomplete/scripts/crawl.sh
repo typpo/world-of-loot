@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+pushd `dirname $0`
+
+mkdir -p data
 pushd data > /dev/null
 touch foo
 rm *
@@ -18,4 +21,5 @@ curl -o transmogset1 http://www.wowhead.com/sitemap=transmog-set/1
 # Least priority first - order matters
 # We want items to override their associated spells whenever possible
 cat spell* item* itemset* transmogset* > all
+popd
 popd
