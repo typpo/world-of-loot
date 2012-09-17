@@ -25,6 +25,11 @@ function AddItemModal() {
 
     // Submit button
     $('#add-item button.btn-add-item').on('click', function() {
+      mixpanel.track('add item', {
+        id: me.id,
+        type: me.type
+      });
+
       me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, data) {
         if (err) {
           return;
@@ -38,6 +43,7 @@ function AddItemModal() {
 
     // Show modal dialog
     $(document).on('click', 'a.js-add-pin, button.js-add-pin', function() {
+      mixpanel.track('add pin modal');
       $('#add-item-image-container').empty();
       $('#add-item').modal();
       $('#add-item-id').val('').focus()
@@ -47,6 +53,7 @@ function AddItemModal() {
     // Pin deletion
     $(document).on('click', '.delete-pin', function() {
       // TODO all this should go in itemmanager
+      mixpanel.track('delete pin');
       var $e = $(this);
       var type = $e.data('item-type');
       var id = $e.data('item-id');
@@ -59,6 +66,7 @@ function AddItemModal() {
 
     // Wants
     $(document).on('click', '.js-item-want', function() {
+      mixpanel.track('item want');
       var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
@@ -78,6 +86,7 @@ function AddItemModal() {
 
     // Haves
     $(document).on('click', '.js-item-have', function() {
+      mixpanel.track('item have');
       var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
@@ -146,7 +155,6 @@ function ItemManager() {
 
   this.AddItemToPage = function(pin_html) {
     // TODO make me!
-    //console.log('anus', pin_html);
     $('#pins').append(pin_html);
     var $pin = $(pin_html);
     $('#pins').append($pin).masonry('appended', $pin);
@@ -178,6 +186,7 @@ function AuthManager() {
 
     // Login/register button
     $('#login-register-modal a.submit').on('click', function() {
+      mixpanel.track('login/register');
       me.Login(
         $('#login-register-username').val(),
         $('#login-register-password').val(),
@@ -188,6 +197,7 @@ function AuthManager() {
 
     // Show modal
     $('a.js-login').on('click', function() {
+      mixpanel.track('login/register modal');
       me.ShowLogin();
       return false;
     });
@@ -223,6 +233,7 @@ function AuthManager() {
 $(function() {
   var $handler = $('#pins');
   $handler.imagesLoaded(function() {
+    mixpanel.track('images loaded');
     // Pin layout
     $handler.masonry({
       itemSelector: '.pin',
@@ -241,6 +252,7 @@ $(function() {
     nextClick: true,
     midWidth: 500,
     beforeLoad: function() {
+      mixpanel.track('lightbox');
       var el, id = $(this.element).data('title-id');
       if (id) {
         el = $('#' + id);
