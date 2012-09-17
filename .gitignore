@@ -4,6 +4,8 @@
 *.db
 *.pyc
 *.rdb
+*.log
+*.out
 bootstrap
 venv
 bin
