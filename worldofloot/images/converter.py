@@ -1,7 +1,10 @@
 import boto
 import cStringIO
 import urllib
-import Image
+try:
+    import Image
+except ImportError:
+    import PIL.Image as Image
 
 class ImageHandler():
   def __init__(self, bucket_name):
