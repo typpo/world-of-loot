@@ -15,7 +15,7 @@ from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
 def index(request):
-  return recent(request)
+  return popular(request)
 
 def about(request):
   return render(request, 'main/about.html', {})
