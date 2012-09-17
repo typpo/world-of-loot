@@ -1,3 +1,4 @@
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,12 +8,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" type="text/css" media="all" />
+    {% compress css %}
     <link href="/media/css/bootstrap.css" rel="stylesheet">
     <link href="/media/css/bootstrap-responsive.css" rel="stylesheet">
     <link rel="stylesheet" href="/media/css/jquery.fancybox.css" type="text/css" media="all" />
     <link href="/media/css/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" type="text/css" media="all" />
+    {% endcompress %}
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -67,19 +70,6 @@
       {% block content %}{% endblock %}
       </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script src="/media/js/bootstrap.min.js"></script>
-    <script src="/media/js/jquery.imagesloaded.min.js"></script>
-    <!--
-    <script src="/media/js/jquery.wookmark.min.js"></script>
-    -->
-    <script src="/media/js/jquery.cookie.js"></script>
-    <script src="/media/js/jquery.fancybox.js"></script>
-    <script src="/media/js/jquery.masonry.min.js"></script>
-    <script src="/media/js/main.js"></script>
-    <script type="text/javascript" src="https://static.wowhead.com/widgets/power.js"></script>
-
     {% block bottom %}
     {# Login/register modal #}
     <div class="modal hide" id="login-register-modal" tabindex="-1" role="dialog" aria-labelledby="login-register-label" aria-hidden="true">
@@ -100,6 +90,26 @@
       </div>
     </div>
     {% endblock %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+    {% compress js %}
+    <script src="/media/js/bootstrap.min.js"></script>
+    <script src="/media/js/jquery.imagesloaded.min.js"></script>
+    <!--
+    <script src="/media/js/jquery.wookmark.min.js"></script>
+    -->
+    <script src="/media/js/jquery.cookie.js"></script>
+    <script src="/media/js/jquery.fancybox.js"></script>
+    <script src="/media/js/jquery.masonry.min.js"></script>
+    <script src="/media/js/main.js"></script>
+    {% endcompress %}
+    <script type="text/javascript" src="https://static.wowhead.com/widgets/power.js"></script>
+
+<!-- start Mixpanel --><script type="text/javascript">(function(c,a){window.mixpanel=a;var b,d,h,e;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===c.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.1.min.js';d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?
+g=a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.identify people.set people.increment".split(" ");for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
+mixpanel.init("16cf9071dcb9c32413f4198eed6c35d8");</script><!-- end Mixpanel -->
 
   </body>
 </html>
