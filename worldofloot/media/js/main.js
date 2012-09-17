@@ -59,7 +59,7 @@ function AddItemModal() {
 
     // Wants
     $(document).on('click', '.js-item-want', function() {
-      var comment = prompt("Add a comment (or leave it blank)");
+      var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
       me.AddItem(item_id, item_type,
@@ -78,7 +78,7 @@ function AddItemModal() {
 
     // Haves
     $(document).on('click', '.js-item-have', function() {
-      var comment = prompt("Add a comment (or leave it blank)");
+      var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
       me.AddItem(item_id, item_type,

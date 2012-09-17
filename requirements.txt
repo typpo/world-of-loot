@@ -16,3 +16,5 @@ gunicorn==0.14.6
 gevent
 celery
 django-supervisor
+
+boto

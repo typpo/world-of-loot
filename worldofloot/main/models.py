@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 #from tasks import process_item
+from worldofloot.images.converter import ImageHandler
+
+image_handler = ImageHandler('worldofloot-images')
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User)
@@ -60,7 +63,15 @@ class Image(models.Model):
   thumb_path = models.CharField(max_length=200)
   attribution = models.CharField(max_length=25)
 
-  priority = models.IntegerField()  # lower is better
+  priority = models.IntegerField(default=15)  # lower is better
+
+  def resize(self):
+    # NOTE only call me once!
+    # resize, upload to s3, and then update path
+    self.thumb_path = image_handler.resize_and_upload(self.path, \
+        '%s-%s-%d' % (self.item.item_type, self.item.item_id, self.priority) \
+        , 250, 1000)
+    self.save()
 
   def __unicode__(self):
     return 'Image for %s' % (self.item.name)
