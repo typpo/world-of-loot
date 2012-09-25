@@ -1,0 +1,87 @@
+{% extends "main/lootview.html" %}
+
+{% load main_extras %}
+
+{% block hero %}{% endblock %}
+
+{% block toptext %}
+{% if not user.is_authenticated and items|length > 0 %}
+<div class="login-plea">
+&raquo; You are not logged in.  Choose &amp; save your gear by <a href="#" class="js-login">logging in</a> or <a href="#" class="js-login">registering</a>.
+</div>
+{% endif %}
+
+{% if items|length > 0 %}
+<div id="stats" class="stats">
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block pins %}
+{% if items|length < 1 %}
+<div class="pin nothing-saved">
+  <h2>
+    <a href="#" class="js-add-pin">Add something here</a><br>or<br><a href="#" class="js-login">log in</a>
+  </h2>
+</div>
+
+{% else %}
+
+{% for item in items %}
+  {% include 'main/pin.html' %}
+{% endfor %}
+
+{% endif %}
+{% endblock %}
+
+{% block bottom %}
+{{ block.super }}
+{# Add Item Modal #}
+<div class="modal hide" id="add-item" tabindex="-1" role="dialog" aria-labelledby="add-item-label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="add-item-label">Add gear or a mount</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="add-item-id">
+          <strong>Item or mount name:</strong>
+        </label>
+        <div class="controls">
+          <input id="add-item-id" type="text" placeholder="">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="add-item-comment">
+          Comment (optional):
+        </label>
+        <div class="controls">
+          <input id="add-item-comment" type="text" placeholder="">
+        </div>
+      </div>
+    </form>
+    <div id="add-item-loader" style="display:none;">
+      Processing your item... <img src="/media/images/loader.gif"/>
+    </div>
+    <div id="add-item-image-container" class="image-container">
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary disabled btn-add-item">Add Item</button>
+  </div>
+</div>
+
+{# Success pseudo-modal #}
+<div id="quick-message-dialog" class="quick-message" style="display:none;">
+  <span></span>
+  <div>
+    <a id="quick-message-dialog-hide" href="#">Ok</a>
+  </div>
+
+</div>
+{% endblock %}

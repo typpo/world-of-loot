@@ -17,6 +17,38 @@ from worldofloot.main.models import Image
 def index(request):
   return popular(request)
 
+def user(request, uname):
+  user_obj = get_object_or_404(User, username=uname)
+  pins = Pin.objects.filter(user=user_obj)
+
+  # TODO get items from pins and use set_images_for_items
+  items = []
+  comments_by_item = {}
+  for pin in pins:
+    item = pin.item
+
+    # Add comment
+    comments_by_item.setdefault(item, [])
+    if pin.comment and len(pin.comment) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+
+    # Choose images
+    images = item.image_set.order_by('priority')
+    if len(images) > 0:
+      item.image = images[0]
+    items.append(item)
+
+  items = uniq(items)
+
+  return render(request, 'main/users.html', {
+    'items': items,
+    'tab': 'user_loot',
+    'comments_by_item': comments_by_item,
+  })
+
+  return render(request, 'main/users.html', {})
+
 def about(request):
   return render(request, 'main/about.html', {})
 
