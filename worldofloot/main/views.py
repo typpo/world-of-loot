@@ -30,6 +30,7 @@ def user(request, uname):
   pins = Pin.objects.filter(user=user_obj)
 
   # TODO get items from pins and use set_images_for_items
+  # TODO this code is duplicated below
   items = []
   comments_by_item = {}
   for pin in pins:
