@@ -14,6 +14,14 @@ from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
+def global_render(request, path, args):
+  first_visit = False
+  if not request.session.get('visited', False):
+    first_visit = True
+    request.session['visited'] = True
+  args['first_visit'] = first_visit
+  return render(request, path, args)
+
 def index(request):
   return popular(request)
 
@@ -41,16 +49,16 @@ def user(request, uname):
 
   items = uniq(items)
 
-  return render(request, 'main/users.html', {
+  return global_render(request, 'main/users.html', {
     'items': items,
     'tab': 'user_loot',
     'comments_by_item': comments_by_item,
   })
 
-  return render(request, 'main/users.html', {})
+  return global_render(request, 'main/users.html', {})
 
 def about(request):
-  return render(request, 'main/about.html', {})
+  return global_render(request, 'main/about.html', {})
 
 def recent(request):
   if 'anon_key' not in request.session:
@@ -70,7 +78,7 @@ def recent(request):
 
   #items = Item.objects.order_by('-created')
   template_items = set_images_for_items(uniq(items))
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
     'comments_by_item': comments_by_item,
@@ -92,7 +100,7 @@ def popular(request):
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.append(pin.item)
   template_items = set_images_for_items(uniq(items))
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
     'comments_by_item': comments_by_item,
@@ -130,7 +138,7 @@ def my_loot(request):
 
   items = uniq(items)
 
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': items,
     'tab': 'my_loot',
     'comments_by_item': comments_by_item,

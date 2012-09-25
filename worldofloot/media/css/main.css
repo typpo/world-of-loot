@@ -10,8 +10,8 @@ body {
   margin-left: -50px;
 }
 
-.well {
-  margin-bottom: 10px;
+#welcome {
+  margin: 10px;
 }
 
 .fixed-top-container {

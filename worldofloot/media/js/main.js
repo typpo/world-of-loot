@@ -36,15 +36,15 @@ function AddItemModal() {
           return;
         }
         $('#add-item').modal('hide');
-        // TODO maybe don't reload because it resets scrolling
-        //window.location.reload();
         item_manager.AddItemToPage(data.pin_html);
       });
     });
 
     // Show modal dialog
     $(document).on('click', 'a.js-add-pin, button.js-add-pin', function() {
-      mixpanel.track('add pin modal');
+      mixpanel.track('add pin modal', {
+        from: $(this).attr('id')
+      });
       $('#add-item-image-container').empty();
       $('#add-item').modal();
       $('#add-item-id').val('').focus()

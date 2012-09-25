@@ -2,8 +2,6 @@
 
 {% load main_extras %}
 
-{% block hero %}{% endblock %}
-
 {% block toptext %}
 {% if not user.is_authenticated and items|length > 0 %}
 <div class="login-plea">
