@@ -250,7 +250,7 @@ $(function() {
 
   $('div .pins a.image-box').fancybox({
     nextClick: true,
-    midWidth: 500,
+    minWidth: 500,
     beforeLoad: function() {
       mixpanel.track('lightbox');
       var el, id = $(this.element).data('title-id');
