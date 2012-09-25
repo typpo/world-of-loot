@@ -313,6 +313,10 @@ $(function() {
       }
     });
   });
+
+  $(document).once('scroll', function() {
+    $('#welcome').hide();
+  });
 });
 
 function showMessage(msg) {
