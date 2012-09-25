@@ -103,13 +103,19 @@ body {
 
 }
 
-.toptext .login-plea {
+.toptext .inline-blurb {
   float: left;
   padding-top: 12px;
+  margin-left: 5px;
+  margin-bottom: 0;
 }
 
-.toptext .login-plea a {
+.toptext .inline-blurb a {
   text-decoration: underline;
+}
+
+.toptext .inline-blurb form {
+  margin: 0;
 }
 
 .user-operations {
