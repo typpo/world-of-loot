@@ -49,10 +49,11 @@ body {
 }
 
 .pins {
-  top: 55px;
+  /*top: 55px;*/
   left: 0;
   position: relative;
   margin: 0 auto;
+  display:none;
 }
 
 .pin {

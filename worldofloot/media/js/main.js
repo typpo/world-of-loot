@@ -314,9 +314,7 @@ $(function() {
     });
   });
 
-  $(document).once('scroll', function() {
-    $('#welcome').hide();
-  });
+  $('#pins').show().css('top', $('#fixed-top-container').height() + 22);
 });
 
 function showMessage(msg) {
