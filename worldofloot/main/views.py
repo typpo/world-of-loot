@@ -18,7 +18,6 @@ def global_render(request, path, args):
   first_visit = False
   if not request.session.get('visited', False):
     first_visit = True
-    request.session['visited'] = True
   args['first_visit'] = first_visit
   return render(request, path, args)
 
@@ -108,6 +107,8 @@ def popular(request):
   })
 
 def my_loot(request):
+  # Stop showing the enticing top banner
+  request.session['visited'] = True
   # get pins
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -332,4 +333,4 @@ def set_image_for_item(item):
 def uniq(seq):
   seen = set()
   seen_add = seen.add
-  return [ x for x in seq if x not in seen and not seen_add(x)]
+  return [x for x in seq if x not in seen and not seen_add(x)]
