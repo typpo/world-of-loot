@@ -3100,6 +3100,7 @@ table .span24 {
   filter: alpha(opacity=40);
 }
 button.close {
+  color: #eee;
   padding: 0;
   cursor: pointer;
   background: transparent;
