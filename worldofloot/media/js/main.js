@@ -82,6 +82,11 @@ $(function() {
   });
 
   $('#pins').show().css('top', $('#fixed-top-container').height() + 22);
+  function hideWelcome() {
+    $('#welcome').hide();
+    $('#pins').css('top', $('#fixed-top-container').height() + 35);
+  }
+
 
   // route
   if (getURLParameter('additem')) {
