@@ -89,7 +89,7 @@ $(function() {
 
 
   // route
-  if (getURLParameter('additem')) {
+  if (Util.getURLParameter('additem')) {
     // open additem dialog
     mixpanel.track('additem from welcome banner');
     add_modal.ShowModalDialog();
