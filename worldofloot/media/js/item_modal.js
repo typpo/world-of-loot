@@ -30,7 +30,7 @@ function AddItemModal() {
         type: me.type
       });
 
-      $(this).attr('disabled', 'disabled');
+      $(this).addClass('disabled');
       me.AddItem(me.id, me.type, 'want', $('#add-item-comment').val(), function(err, data) {
         if (err) {
           return;
