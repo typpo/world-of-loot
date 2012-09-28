@@ -82,11 +82,14 @@ $(function() {
   });
 
   $('#pins').show().css('top', $('#fixed-top-container').height() + 22);
-  function hideWelcome() {
+
+  $('#welcome-close').on('click', function() {
+    // close button
+    // TODO should set cookie too...
     $('#welcome').hide();
     $('#pins').css('top', $('#fixed-top-container').height() + 35);
-  }
-
+    return false;
+  });
 
   // route
   if (Util.getURLParameter('additem')) {
