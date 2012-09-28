@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+#from tasks import process_item
+from worldofloot.images.converter import ImageHandler
+
+image_handler = ImageHandler('worldofloot-images')
 
 class UserProfile(models.Model):
   user = models.OneToOneField(User)
@@ -15,16 +19,25 @@ class Item(models.Model):
   name = models.CharField(max_length=75)
   ilvl = models.IntegerField(default=-1)
   quality = models.CharField(max_length=20, null=True) # TODO convert to select
-  icon = models.CharField(max_length=20, null=True)
-  slot = models.CharField(max_length=20, null=True) # TODO convert to select
+  icon = models.CharField(max_length=75, null=True)
+  slot = models.CharField(max_length=25, null=True) # TODO convert to select
 
   wants = models.IntegerField(default=0)
   haves = models.IntegerField(default=0)
+  popularity = models.IntegerField(default=0)
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
 
   tags = TaggableManager()
+
+  def increment_wants(self):
+    self.wants += 1
+    self.popularity += 1
+
+  def increment_haves(self):
+    self.haves += 1
+    self.popularity += 1
 
   def __unicode__(self):
     return 'Item %s (%s, %s)' % (self.name, self.item_id, self.item_type)
@@ -50,7 +63,15 @@ class Image(models.Model):
   thumb_path = models.CharField(max_length=200)
   attribution = models.CharField(max_length=25)
 
-  priority = models.IntegerField()  # lower is better
+  priority = models.IntegerField(default=15)  # lower is better
+
+  def resize(self):
+    # NOTE only call me once!
+    # resize, upload to s3, and then update path
+    self.thumb_path = image_handler.resize_and_upload(self.path, \
+        '%s-%s-%d' % (self.item.item_type, self.item.item_id, self.priority) \
+        , 250, 1000)
+    self.save()
 
   def __unicode__(self):
     return 'Image for %s' % (self.item.name)

@@ -1,9 +1,5 @@
 import os
 
-# heroku
-import dj_database_url
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
@@ -41,11 +37,27 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+# Databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'worldofloot',                      # Or path to database file if using sqlite3.
+        'USER': 'django_login',                      # Not used with sqlite3.
+        'PASSWORD': 'foobar',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media/')
 MEDIA_URL = '/media/'
+#COMPRESS_ENABLED=True
+COMPRESS_ROOT = MEDIA_ROOT
+COMPRESS_URL = MEDIA_URL
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -160,6 +172,8 @@ INSTALLED_APPS = (
     'taggit',
     'south',
     'gunicorn',
+    'djsupervisor',
+    'compressor',
 
     #'allauth',
     #'allauth.account',

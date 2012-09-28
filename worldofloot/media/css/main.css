@@ -1,5 +1,5 @@
 body {
-  padding-top: 55px;
+  padding-top: 30px;
   padding-bottom: 40px;
 }
 
@@ -10,13 +10,24 @@ body {
   margin-left: -50px;
 }
 
-.well {
-  margin-bottom: 10px;
+#welcome {
+  margin: 10px;
+}
+
+.fixed-top-container {
+  padding-top: 10px;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  background-color: #141414;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .tabs ul {
-  width: 100%;
-  border-bottom: 1px solid #ccc;
+  float: left;
+  display: inline;
   padding: 0;
   margin: 0;
 }
@@ -38,10 +49,11 @@ body {
 }
 
 .pins {
-  top: 48px;
+  /*top: 55px;*/
   left: 0;
   position: relative;
   margin: 0 auto;
+  display:none;
 }
 
 .pin {
@@ -92,21 +104,33 @@ body {
 
 }
 
-.toptext .login-plea {
+.toptext .inline-blurb {
   float: left;
-
+  padding-top: 12px;
+  margin-left: 5px;
+  margin-bottom: 0;
 }
 
-.toptext .login-plea a {
+.toptext .inline-blurb a {
   text-decoration: underline;
 }
 
-.user-operations {
-  position: relative;
-  float: right;
-  right: 101px;
-  margin-top: 8px;
+.toptext .inline-blurb form {
+  margin: 0;
 }
+
+.user-operations {
+  float: right;
+  position: fixed;
+  right: 120px;
+  padding-bottom: 12px;
+  margin: 0;
+}
+
+.user-operations form {
+  margin: 0;
+}
+
 
 .stats {
   position: relative;
@@ -115,10 +139,7 @@ body {
 }
 
 .nothing-saved {
-  position: relative;
-  float: left;
-  top: 50px;
-  left: 10px;
+  text-align: center;
 }
 
 .nothing-saved a {

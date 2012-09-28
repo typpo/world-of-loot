@@ -2,15 +2,12 @@
 
 {% load main_extras %}
 
+{% block hero %}{% endblock %}
+
 {% block toptext %}
 {% if not user.is_authenticated and items|length > 0 %}
-<div class="inline-blurb">
+<div class="login-plea">
 &raquo; You are not logged in.  Choose &amp; save your gear by <a href="#" class="js-login">logging in</a> or <a href="#" class="js-login">registering</a>.
-</div>
-{% elif tab == 'my_loot' and user.is_authenticated %}
-<div class="inline-blurb">
-  &raquo; Share your page with others:
-  <a href="http://worldofloot.com/user/{{user.username}}">http://worldofloot.com/user/{{user.username}}</a>
 </div>
 {% endif %}
 

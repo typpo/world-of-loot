@@ -36,9 +36,11 @@ def scrape_item(id, item_type):
   item.save()
 
   # now look for images
+  # TODO for items that don't have images, we should check for images
+  # every now and then because they could've been added.
   image_regex = re.compile("{id:(\d+),user:'(.*?)'(.*?)}")
   image_count = 0
-  images = []
+  #images = []
   print item_type, id
   for m in image_regex.finditer(html):
     image_id = m.group(1)
@@ -48,13 +50,18 @@ def scrape_item(id, item_type):
     path = 'http://wow.zamimg.com/uploads/screenshots/normal/%s.jpg' % image_id
     thumb_path = 'http://wow.zamimg.com/uploads/screenshots/thumb/%s.jpg' % image_id
     # sticky:1 indicates best image
-    priority = 0 if m.group(3).endswith('sticky:1') else image_count
-
     print '\tImage:', image_id, 'by', attribution
 
-    images.append(Image(item=item, image_id=image_id, path=path,
-        thumb_path=thumb_path, attribution=attribution,
-        priority=priority))
-  Image.objects.bulk_create(images)
+    new_image = Image.objects.create(item=item, image_id=image_id, path=path,
+        thumb_path=thumb_path, attribution=attribution)
+
+    if m.group(3).endswith('sticky:1'):
+      new_image.priority = 0
+      new_image.resize()   # resize and upload to s3
+    else:
+      new_image.priority = image_count
+    #images.append(new_image)
+
+  #Image.objects.bulk_create(images)
 
   return item

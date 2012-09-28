@@ -7,18 +7,65 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.template import Template, Context
+from django.template.loader import get_template
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
+def global_render(request, path, args):
+  first_visit = False
+  if not request.session.get('visited', False):
+    first_visit = True
+  args['first_visit'] = first_visit
+  return render(request, path, args)
+
 def index(request):
-  return recent(request)
+  return popular(request)
+
+def user(request, uname):
+  user_obj = get_object_or_404(User, username=uname)
+  pins = Pin.objects.filter(user=user_obj)
+
+  # TODO get items from pins and use set_images_for_items
+  # TODO this code is duplicated below
+  items = []
+  comments_by_item = {}
+  for pin in pins:
+    item = pin.item
+
+    # Add comment
+    comments_by_item.setdefault(item, [])
+    if pin.comment and len(pin.comment) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+
+    # Choose images
+    images = item.image_set.order_by('priority')
+    if len(images) > 0:
+      item.image = images[0]
+    items.append(item)
+
+  items = uniq(items)
+
+  return global_render(request, 'main/users.html', {
+    'items': items,
+    'tab': 'user_loot',
+    'comments_by_item': comments_by_item,
+  })
+
+  return global_render(request, 'main/users.html', {})
 
 def about(request):
-  return render(request, 'main/about.html', {})
+  return global_render(request, 'main/about.html', {})
 
 def recent(request):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
   items = []
   pins = Pin.objects.order_by('-created')
   comments_by_item = {}
@@ -31,14 +78,19 @@ def recent(request):
 
   #items = Item.objects.order_by('-created')
   template_items = set_images_for_items(uniq(items))
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
     'comments_by_item': comments_by_item,
   })
 
 def popular(request):
-  pins = Pin.objects.order_by('-item__wants')
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
+  pins = Pin.objects.order_by('-item__popularity')
   items = []
   comments_by_item = {}
   for pin in pins:
@@ -48,13 +100,15 @@ def popular(request):
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.append(pin.item)
   template_items = set_images_for_items(uniq(items))
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
     'comments_by_item': comments_by_item,
   })
 
 def my_loot(request):
+  # Stop showing the enticing top banner
+  request.session['visited'] = True
   # get pins
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -86,7 +140,7 @@ def my_loot(request):
 
   items = uniq(items)
 
-  return render(request, 'main/myloot.html', {
+  return global_render(request, 'main/myloot.html', {
     'items': items,
     'tab': 'my_loot',
     'comments_by_item': comments_by_item,
@@ -114,6 +168,10 @@ def get_item_info(request, item_type, item_id):
 
 
 def add_item(request, item_type, item_id, verb):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
   if verb not in ['want', 'have']:
     return HttpResponse('bad verb', status=500)
 
@@ -167,13 +225,29 @@ def add_item(request, item_type, item_id, verb):
 
   if increment_item_verb:
     if verb == 'want':
-      item.wants += 1
+      item.increment_wants()
     elif verb == 'have':
-      item.haves += 1
+      item.increment_haves()
     item.save()
 
   # build json response
-  response = {'success': True, 'already_have': already_have}
+
+  # build pin render context
+  item = set_image_for_item(item)
+  comments_by_item = {}
+  comments_by_item.setdefault(item, [])
+  if pin.comment and len(pin.comment) > 0:
+    comment_user = pin.user.username if pin.user else 'anonymous'
+    comments_by_item[item].append({'user': comment_user, 'comment': pin.comment})
+  # render pin
+  pin_html = get_template('main/pin.html').render( \
+      Context({
+        'item': item,
+        'comments_by_item': comments_by_item
+      }))
+  response = {'success': True, 'already_have': already_have, \
+      'pin_html': pin_html,
+      }
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def remove_item(request, item_type, item_id):
@@ -244,15 +318,19 @@ def random_string(n):
 def set_images_for_items(items):
   ret = []
   for item in items:
-    images = item.image_set.order_by('priority')
-    if len(images) > 0:
-      item.image = images[0]
+    item = set_image_for_item(item)
     ret.append(item)
   return ret
+
+def set_image_for_item(item):
+  images = item.image_set.order_by('priority')
+  if len(images) > 0:
+    item.image = images[0]
+  return item
 
 # dedupes a list but keeps order
 # http://stackoverflow.com/questions/480214/how-do-you-remove-duplicates-from-a-list-in-python-whilst-preserving-order
 def uniq(seq):
   seen = set()
   seen_add = seen.add
-  return [ x for x in seq if x not in seen and not seen_add(x)]
+  return [x for x in seq if x not in seen and not seen_add(x)]
