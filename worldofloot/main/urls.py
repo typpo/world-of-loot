@@ -10,6 +10,7 @@ urlpatterns = patterns('worldofloot.main.views',
     url(r'^info/(.*)/(.*)', 'get_item_info', name='get_item_info'),
     url(r'^add/(.*)/(.*)/(.*)', 'add_item', name='add_item'),
     url(r'^remove/(.*)/(.*)', 'remove_item', name='remove_item'),
+    url(r'^turn_off_welcome_banner/', 'turn_off_welcome_banner', name='turn_off_welcome_banner'),
     url(r'^login_or_create/', 'login_or_create', name='login_or_create'),
     url(r'^logout/', 'logout_user', name='logout_user'),
 )

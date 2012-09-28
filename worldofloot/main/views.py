@@ -265,6 +265,10 @@ def remove_item(request, item_type, item_id):
 
   return HttpResponse(status=200)
 
+def turn_off_welcome_banner(request):
+  request.session['visited'] = True
+  return HttpResponse(status=200)
+
 # TODO move this to its own app
 # csrf reference, see https://docs.djangoproject.com/en/dev/ref/contrib/csrf/
 # auth reference, see https://docs.djangoproject.com/en/dev/topics/auth/

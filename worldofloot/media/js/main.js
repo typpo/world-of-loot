@@ -85,9 +85,9 @@ $(function() {
 
   $('#welcome-close').on('click', function() {
     // close button
-    // TODO should set cookie too...
     $('#welcome').hide();
     $('#pins').css('top', $('#fixed-top-container').height() + 35);
+    $.getJSON('/turn_off_welcome_banner', function() {});
     return false;
   });
 
