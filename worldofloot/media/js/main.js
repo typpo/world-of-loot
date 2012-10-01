@@ -1,4 +1,7 @@
 $(function() {
+  mixpanel.track('loaded');
+
+  // Image layout
   var $handler = $('#pins');
   $handler.imagesLoaded(function() {
     mixpanel.track('images loaded');
@@ -16,6 +19,7 @@ $(function() {
     $('#user-operations').css('right', Math.min(right_offset, 250));
   });
 
+  // Wire lightbox
   $('div .pins a.image-box').fancybox({
     nextClick: true,
     minWidth: 500,
@@ -45,11 +49,13 @@ $(function() {
     }
   });
 
+  // Wire lightbox triggers
   $(document).on('click', 'a.js-open-corresponding-lightbox', function() {
     $('#lightbox-trigger-' + $(this).data('lightbox-id')).trigger('click');
     return false;
   });
 
+  // Initialize managers
   var add_modal = new AddItemModal();
   add_modal.Init();
 
@@ -59,11 +65,13 @@ $(function() {
   window.item_manager = new ItemManager();
   item_manager.Init();
 
+  // Wire quick message dialog
   $('#quick-message-dialog-hide').on('click', function() {
     $('#quick-message-dialog').hide();
     return false;
   });
 
+  // Wire filter
   $('#items-filter').on('keyup', function() {
     var q = $.trim($(this).val()).toLowerCase();
     if (q == '') {
@@ -81,8 +89,10 @@ $(function() {
     });
   });
 
+  // Fix bin css
   $('#pins').show().css('top', $('#fixed-top-container').height() + 22);
 
+  // Welcome banenr
   $('#welcome-close').on('click', function() {
     // close button
     $('#welcome').hide();
