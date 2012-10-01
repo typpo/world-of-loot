@@ -31,7 +31,7 @@
 
 {% else %}
 
-{% for item in items %}
+{% for item in items|slice:":35" %}
   {% include 'main/pin.html' %}
 {% endfor %}
 
