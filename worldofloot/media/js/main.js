@@ -89,7 +89,7 @@ $(function() {
     });
   });
 
-  // Fix bin css
+  // Fix pin css
   $('#pins').show().css('top', $('#fixed-top-container').height() + 22);
 
   // Welcome banenr
