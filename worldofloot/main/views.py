@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.template import Template, Context
 from django.template.loader import get_template
+from worldofloot.settings import DEBUG
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
@@ -19,6 +20,8 @@ def global_render(request, path, args):
   if not request.session.get('visited', False):
     first_visit = True
   args['first_visit'] = first_visit
+
+  args['debug'] = DEBUG
   return render(request, path, args)
 
 def index(request):
