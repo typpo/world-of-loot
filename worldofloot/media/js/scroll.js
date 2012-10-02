@@ -18,11 +18,11 @@ function ScrollManager() {
     var $newpins = $('#pins .pin-hidden:lt(15)').css('visibility', 'hidden').show();
     // TODO set images to load
     // TODO show loader
+    $newpins.removeClass('pin-hidden').addClass('pin').each(function() {
+      var $pinimg = $(this).find('img');
+      $pinimg.attr('src', $pinimg.data('src'));
+    });
     $newpins.imagesLoaded(function() {
-      $newpins.removeClass('pin-hidden').addClass('pin').each(function() {
-        var $pinimg = $(this).find('img');
-        $pinimg.attr('src', $pinimg.data('src'));
-      });
       $('#pins').masonry('appended', $newpins, true);
       $newpins.css('visibility', 'visible');
     })
