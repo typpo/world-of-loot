@@ -29,7 +29,11 @@
 {% else %}
 
 {% for item in items %}
-  {% include 'main/pin.html' %}
+  {% if forloop.counter0 < 15 %}
+    {% include 'main/pin.html' with hide_image="False" %}
+  {% else %}
+    {% include 'main/pin.html' %}
+  {% endif %}
 {% endfor %}
 
 {% endif %}
