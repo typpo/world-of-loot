@@ -1,24 +1,6 @@
 $(function() {
   mixpanel.track('loaded');
 
-  // Image layout
-  var $handler = $('#pins');
-  $handler.imagesLoaded(function() {
-    mixpanel.track('images loaded');
-    // Pin layout
-    $handler.masonry({
-      itemSelector: '.pin',
-      columnWidth: 269,
-      isFitWidth: true
-    });
-
-    $('#main-page-loader').hide();
-    $('#pins').css('visibility', 'visible');
-    // after layout is done, align search, add item, etc. with pins container
-    var right_offset = $(window).width() - ($handler.offset().left + $handler.outerWidth());
-    $('#user-operations').css('right', Math.min(right_offset, 250));
-  });
-
   // Wire lightbox
   $('div .pins a.image-box').fancybox({
     nextClick: true,
@@ -56,6 +38,9 @@ $(function() {
   });
 
   // Initialize managers
+  var scroll_manager = new ScrollManager();
+  scroll_manager.Init();
+
   var add_modal = new AddItemModal();
   add_modal.Init();
 

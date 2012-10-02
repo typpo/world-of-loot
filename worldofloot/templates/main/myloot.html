@@ -31,8 +31,12 @@
 
 {% else %}
 
-{% for item in items|slice:":50" %}
-  {% include 'main/pin.html' %}
+{% for item in items %}
+  {% if forloop.counter0 < 15 %}
+    {% include 'main/pin.html' with hide_image="False" %}
+  {% else %}
+    {% include 'main/pin.html' %}
+  {% endif %}
 {% endfor %}
 
 {% endif %}
