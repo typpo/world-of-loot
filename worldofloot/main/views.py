@@ -30,7 +30,7 @@ def global_render(request, path, args):
 def index(request):
   return popular(request)
 
-@cache_page(60*60)
+#@cache_page(60*60)
 def user(request, uname):
   user_obj = get_object_or_404(User, username=uname)
   pins = Pin.objects.filter(user=user_obj)
@@ -67,7 +67,7 @@ def user(request, uname):
 def about(request):
   return global_render(request, 'main/about.html', {})
 
-@cache_page(60 * 60)
+#@cache_page(60 * 60)
 def recent(request):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -92,7 +92,7 @@ def recent(request):
     'comments_by_item': comments_by_item,
   })
 
-@cache_page(60 * 60)
+#@cache_page(60 * 60)
 def popular(request):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -115,7 +115,7 @@ def popular(request):
     'comments_by_item': comments_by_item,
   })
 
-@cache_page(60 * 60)
+#@cache_page(60 * 60)
 def my_loot(request):
   # Stop showing the enticing top banner
   request.session['visited'] = True
@@ -242,10 +242,10 @@ def add_item(request, item_type, item_id, verb):
 
 
   # Invalidate all caches
-  expire_view_cache('recent')
-  expire_view_cache('popular')
-  expire_view_cache('user')
-  expire_view_cache('user')
+  #expire_view_cache('recent')
+  #expire_view_cache('popular')
+  #expire_view_cache('user')
+  #expire_view_cache('user')
 
   # build json response
 
