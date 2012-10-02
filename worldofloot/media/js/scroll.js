@@ -15,7 +15,7 @@ function ScrollManager() {
 
   function loadData() {
     // Load in the next bunch
-    var $newpins = $('#pins .pin-hidden:lt(10)').css('visibility', 'hidden').show();
+    var $newpins = $('#pins .pin-hidden:lt(15)').css('visibility', 'hidden').show();
     // TODO set images to load
     // TODO show loader
     $newpins.imagesLoaded(function() {
