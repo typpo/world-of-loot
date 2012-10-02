@@ -1,23 +1,19 @@
 function ScrollManager() {
   var me = this;
 
-  var isLoading = false;  // always false for now
   function onScroll(event) {
-    // Only check when we're not still waiting for data.
-    if(!isLoading) {
-      // Check if we're within 100 pixels of the bottom edge of the broser window.
-      var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 100);
-      if(closeToBottom) {
-        loadData();
-      }
+    // Check if we're within 100 pixels of the bottom edge of the browser window.
+    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 100);
+    if(closeToBottom) {
+      loadData();
     }
   }
 
   function loadData() {
     // Load in the next bunch
     var $newpins = $('#pins .pin-hidden:lt(15)').css('visibility', 'hidden').show();
-    // TODO set images to load
     // TODO show loader
+    // TODO load from ajax
     $newpins.removeClass('pin-hidden').addClass('pin').each(function() {
       var $pinimg = $(this).find('img');
       $pinimg.attr('src', $pinimg.data('src'));
@@ -52,6 +48,8 @@ function ScrollManager() {
 
   this.Init = function() {
     initialLoadData();
+    // hack so always scrollable
+    $('body').css('height', $(window).height() + 10);
     $(document).bind('scroll', onScroll);
     window.sm = me;
   }
