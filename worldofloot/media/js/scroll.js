@@ -21,6 +21,7 @@ function ScrollManager() {
     $newpins.imagesLoaded(function() {
       $('#pins').masonry('appended', $newpins, true);
       $newpins.css('visibility', 'visible');
+      mixpanel.track('scrolled');
     })
   }
 
