@@ -40,12 +40,11 @@ def scrape_item(id, item_type):
   # every now and then because they could've been added.
   image_regex = re.compile("{id:(\d+),user:'(.*?)'(.*?)}")
   image_count = 0
-  #images = []
   print item_type, id
-  for m in image_regex.finditer(html):
+
+  def process_image(m):
     image_id = m.group(1)
     attribution = m.group(2)
-    image_count += 1
 
     path = 'http://wow.zamimg.com/uploads/screenshots/normal/%s.jpg' % image_id
     thumb_path = 'http://wow.zamimg.com/uploads/screenshots/thumb/%s.jpg' % image_id
@@ -60,8 +59,18 @@ def scrape_item(id, item_type):
       new_image.resize()   # resize and upload to s3
     else:
       new_image.priority = image_count
-    #images.append(new_image)
 
-  #Image.objects.bulk_create(images)
+  # first try to find sticky, which is the best iamge
+  sticky_found = False
+  for m in image_regex.finditer(html):
+    if m.group(3).endswith('sticky:1'):
+      process_image(m)
+      sticky_found = True
+
+  if not sticky_found:
+    for m in image_regex.finditer(html):
+      image_count += 1
+      process_image(m)
+      break  # breaking for now
 
   return item
