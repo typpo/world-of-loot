@@ -260,7 +260,8 @@ def add_item(request, item_type, item_id, verb):
   pin_html = get_template('main/pin.html').render( \
       Context({
         'item': item,
-        'comments_by_item': comments_by_item
+        'comments_by_item': comments_by_item,
+        'hide_image': 'False',
       }))
   response = {'success': True, 'already_have': already_have, \
       'pin_html': pin_html,
