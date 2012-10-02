@@ -2,6 +2,7 @@ import json
 import wowhead
 import random
 import string
+
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
@@ -9,6 +10,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.template import Template, Context
 from django.template.loader import get_template
+from django.views.decorators.cache import cache_page
+
 from worldofloot.settings import DEBUG
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
@@ -27,6 +30,7 @@ def global_render(request, path, args):
 def index(request):
   return popular(request)
 
+@cache_page(60*60)
 def user(request, uname):
   user_obj = get_object_or_404(User, username=uname)
   pins = Pin.objects.filter(user=user_obj)
@@ -63,6 +67,7 @@ def user(request, uname):
 def about(request):
   return global_render(request, 'main/about.html', {})
 
+@cache_page(60 * 60)
 def recent(request):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -87,6 +92,7 @@ def recent(request):
     'comments_by_item': comments_by_item,
   })
 
+@cache_page(60 * 60)
 def popular(request):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
@@ -109,6 +115,7 @@ def popular(request):
     'comments_by_item': comments_by_item,
   })
 
+@cache_page(60 * 60)
 def my_loot(request):
   # Stop showing the enticing top banner
   request.session['visited'] = True
@@ -233,6 +240,13 @@ def add_item(request, item_type, item_id, verb):
       item.increment_haves()
     item.save()
 
+
+  # Invalidate all caches
+  expire_view_cache('recent')
+  expire_view_cache('popular')
+  expire_view_cache('user')
+  expire_view_cache('user')
+
   # build json response
 
   # build pin render context
@@ -341,3 +355,38 @@ def uniq(seq):
   seen = set()
   seen_add = seen.add
   return [x for x in seq if x not in seen and not seen_add(x)]
+
+def expire_view_cache(view_name, args=[], namespace=None, key_prefix=None):
+  """
+  This function allows you to invalidate any view-level cache.
+      view_name: view function you wish to invalidate or it's named url pattern
+      args: any arguments passed to the view function
+      namepace: optioal, if an application namespace is needed
+      key prefix: for the @cache_page decorator for the function (if any)
+    http://stackoverflow.com/questions/2268417/expire-a-view-cache-in-django
+    http://stackoverflow.com/questions/7127972/django-how-to-invalidate-per-view-cache
+  """
+  from django.core.urlresolvers import reverse
+  from django.http import HttpRequest
+  from django.utils.cache import get_cache_key
+  from django.core.cache import cache
+  # create a fake request object
+  request = HttpRequest()
+  # Loookup the request path:
+  if namespace:
+      view_name = namespace + ":" + view_name
+  request.path = reverse(view_name, args=args)
+  # get cache key, expire if the cached item exists:
+  key = get_cache_key(request, key_prefix=key_prefix)
+  if key:
+      if cache.get(key):
+          # Delete the cache entry.
+          #
+          # Note that there is a possible race condition here, as another
+          # process / thread may have refreshed the cache between
+          # the call to cache.get() above, and the cache.set(key, None)
+          # below.  This may lead to unexpected performance problems under
+          # severe load.
+          cache.set(key, None, 0)
+      return True
+  return False
