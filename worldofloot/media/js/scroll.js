@@ -2,6 +2,7 @@ function ScrollManager() {
   var me = this;
 
   var page = 1;
+  var loaderEnabled = true;
 
   function onScroll(event) {
     // Check if we're within 100 pixels of the bottom edge of the browser window.
@@ -12,8 +13,11 @@ function ScrollManager() {
   }
 
   function loadData() {
+    if (loaderEnabled) return;
     // TODO show loader
+    loaderEnabled = false;
     $.getJSON('/api/' + wol_tab_context + '/' + page, function(data) {
+      loaderEnabled  = true;
       if (!data || !data.pin_html || !data.success) {
         // nothing more (or an error occurred)
         return;
