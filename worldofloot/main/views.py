@@ -18,7 +18,7 @@ from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
-ITEM_BLOCK_SIZE = 5
+ITEM_BLOCK_SIZE = 15
 
 def global_render(request, path, args):
   first_visit = False
@@ -61,7 +61,7 @@ def recent(request):
 def get_recent_items(request, str_page='0'):
   page = int(str_page)
   try:
-    pins = Paginator(Pin.objects.order_by('-created'), ITEM_BLOCK_SIZE).page(page+1)
+    pins = Paginator(uniq(Pin.objects.order_by('-created')), ITEM_BLOCK_SIZE).page(page+1)
   except EmptyPage:
     return [], []
 
@@ -73,7 +73,7 @@ def get_recent_items(request, str_page='0'):
       comment_user = pin.user.username if pin.user else 'anonymous'
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.append(pin.item)
-  template_items = set_images_for_items(uniq(items))
+  template_items = set_images_for_items(items)
 
   return template_items, comments_by_item
 
@@ -93,7 +93,7 @@ def popular(request):
 def get_popular_items(request, str_page='0'):
   page = int(str_page)
   try:
-    pins = Paginator(Pin.objects.order_by('-item__popularity', '-created'), ITEM_BLOCK_SIZE).page(page+1)
+    pins = Paginator(uniq(Pin.objects.order_by('-item__popularity', '-created')), ITEM_BLOCK_SIZE).page(page+1)
   except EmptyPage:
     return [], []
 
@@ -105,7 +105,7 @@ def get_popular_items(request, str_page='0'):
       comment_user = pin.user.username if pin.user else 'anonymous'
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.append(pin.item)
-  template_items = set_images_for_items(uniq(items))
+  template_items = set_images_for_items(items)
 
   return template_items, comments_by_item
 
@@ -123,27 +123,39 @@ def user_loot_json(request, username, page):
   # special case
   items, comments_by_item = get_user_loot_items(request, username, page)
   pin_html = ''
+  item_uids = set()
   for item in items:
     context = Context({
       'item': item,
       'comments_by_item': comments_by_item,
       'hide_image': 'False',
     })
+    item_uids.add(item.get_uid())
     pin_html += get_template('main/pin.html').render(context)
-  response = { 'success': True, 'pin_html': pin_html.replace('\n', ''), }
+  response = {
+      'success': True,
+      'pin_html': pin_html.replace('\n', ''),
+      'item_uids': list(item_uids),
+  }
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def api_response(request, fn, page):
   items, comments_by_item = fn(request, page)
   pin_html = ''
+  item_uids = set()
   for item in items:
     context = Context({
       'item': item,
       'comments_by_item': comments_by_item,
       'hide_image': 'False',
     })
+    item_uids.add(item.get_uid())
     pin_html += get_template('main/pin.html').render(context)
-  response = { 'success': True, 'pin_html': pin_html.replace('\n', ''), }
+  response = {
+      'success': True,
+      'pin_html': pin_html.replace('\n', ''),
+      'item_uids': list(item_uids),
+  }
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def my_loot(request):
@@ -179,7 +191,7 @@ def get_generic_user_page_items(request, str_page, pins):
   # This "get_X_items" is special, it needs the request
   page = int(str_page)
   try:
-    pins = Paginator(pins, ITEM_BLOCK_SIZE).page(page+1)
+    pins = Paginator(uniq(pins), ITEM_BLOCK_SIZE).page(page+1)
   except EmptyPage:
     return [], []
 
@@ -200,8 +212,6 @@ def get_generic_user_page_items(request, str_page, pins):
     if len(images) > 0:
       item.image = images[0]
     items.append(item)
-
-  items = uniq(items)
   return items, comments_by_item
 
 
@@ -392,10 +402,10 @@ def set_image_for_item(item):
     item.image = images[0]
   return item
 
-# dedupes a list but keeps order
+# dedupes a queryset of Pins but keeps order
 # http://stackoverflow.com/questions/480214/how-do-you-remove-duplicates-from-a-list-in-python-whilst-preserving-order
 def uniq(seq):
   seen = set()
   seen_add = seen.add
-  ret = [x for x in seq if x.get_uid() not in seen and not seen_add(x.get_uid())]
+  ret = [x for x in seq if x.item.get_uid() not in seen and not seen_add(x.item.get_uid())]
   return ret
