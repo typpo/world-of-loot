@@ -18,10 +18,11 @@ function ScrollManager() {
         // nothing more (or an error occurred)
         return;
       }
-      var $newpins = $(data.pin_html).appendTo('#pins').imagesLoaded(function() {
-        $('#pins').masonry('appended', $newpins, true);
-        $newpins.css('visibility', 'visible');
-        mixpanel.track('scrolled');
+      var $newpins = $(data.pin_html).css('visibility', 'hidden')
+        .appendTo('#pins').imagesLoaded(function() {
+          $('#pins').masonry('appended', $newpins, true);
+          $newpins.css('visibility', 'visible');
+          mixpanel.track('scrolled');
       });
       page++;
     });
