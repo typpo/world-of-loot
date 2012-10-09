@@ -1,6 +1,8 @@
 function ScrollManager() {
   var me = this;
 
+  var page = 1;
+
   function onScroll(event) {
     // Check if we're within 100 pixels of the bottom edge of the browser window.
     var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 100);
@@ -10,19 +12,19 @@ function ScrollManager() {
   }
 
   function loadData() {
-    // Load in the next bunch
-    var $newpins = $('#pins .pin-hidden:lt(15)').css('visibility', 'hidden').show();
     // TODO show loader
-    // TODO load from ajax
-    $newpins.removeClass('pin-hidden').addClass('pin').each(function() {
-      var $pinimg = $(this).find('img');
-      $pinimg.attr('src', $pinimg.data('src'));
+    $.getJSON('/api/' + wol_tab_context + '/' + page, function(data) {
+      if (!data || !data.pin_html || !data.success) {
+        // nothing more (or an error occurred)
+        return;
+      }
+      var $newpins = $(data.pin_html).appendTo('#pins').imagesLoaded(function() {
+        $('#pins').masonry('appended', $newpins, true);
+        $newpins.css('visibility', 'visible');
+        mixpanel.track('scrolled');
+      });
+      page++;
     });
-    $newpins.imagesLoaded(function() {
-      $('#pins').masonry('appended', $newpins, true);
-      $newpins.css('visibility', 'visible');
-      mixpanel.track('scrolled');
-    })
   }
 
   function initialLoadData() {

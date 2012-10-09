@@ -1,20 +1,12 @@
 {% load main_extras %}
 
-{% if hide_image == "False" %}
 <div class="pin" data-item-name="{{ item.name|lower }}">
-{% else %}
-<div class="pin-hidden" data-item-name="{{ item.name|lower }}" style="display:none;">
-{% endif %}
   {% if not tab or tab == 'my_loot' %}
   <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
   {% endif %}
   {% if item.image.path %}
   <a id="lightbox-trigger-{{ forloop.counter }}" href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
-    {% if hide_image == "False" %}
     <img src="{{ item.image.thumb_path }}" alt="{{ item.name }}" border="1" />
-    {% else %}
-    <img src="/media/images/unavailable.png" alt="{{ item.name }}" data-src="{{ item.image.thumb_path }}" border="1" />
-    {% endif %}
     </a>
   {% else %}
     <a id="lightbox-trigger-{{ forloop.counter }} "href="/media/images/unavailable.png" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">

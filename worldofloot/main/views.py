@@ -10,13 +10,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.template import Template, Context
 from django.template.loader import get_template
-from django.views.decorators.cache import cache_page
+from django.core.paginator import Paginator, EmptyPage
 
 from worldofloot.settings import DEBUG
 from worldofloot.main.models import UserProfile
 from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
+
+ITEM_BLOCK_SIZE = 15
 
 def global_render(request, path, args):
   first_visit = False
@@ -25,81 +27,45 @@ def global_render(request, path, args):
   args['first_visit'] = first_visit
 
   args['debug'] = DEBUG
+  args['items_per_block'] = ITEM_BLOCK_SIZE
   return render(request, path, args)
 
 def index(request):
   return popular(request)
 
-#@cache_page(60*60)
-def user(request, uname):
-  user_obj = get_object_or_404(User, username=uname)
-  pins = Pin.objects.filter(user=user_obj)
-
-  # TODO get items from pins and use set_images_for_items
-  # TODO this code is duplicated below
-  items = []
-  comments_by_item = {}
-  for pin in pins:
-    item = pin.item
-
-    # Add comment
-    comments_by_item.setdefault(item, [])
-    if pin.comment and len(pin.comment) > 0:
-      comment_user = pin.user.username if pin.user else 'anonymous'
-      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
-
-    # Choose images
-    images = item.image_set.order_by('priority')
-    if len(images) > 0:
-      item.image = images[0]
-    items.append(item)
-
-  items = uniq(items)
+def user(request, username):
+  items, comments_by_item = get_user_loot_items(request, username, '0')
 
   return global_render(request, 'main/users.html', {
     'items': items,
-    'tab': 'user_loot',
+    'tab': 'user_loot/' + username,
     'comments_by_item': comments_by_item,
   })
-
-  return global_render(request, 'main/users.html', {})
 
 def about(request):
   return global_render(request, 'main/about.html', {})
 
-#@cache_page(60 * 60)
 def recent(request):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
 
-  items = []
-  pins = Pin.objects.order_by('-created')
-  comments_by_item = {}
-  for pin in pins:
-    comments_by_item.setdefault(pin.item, [])
-    if pin.comment and len(pin.comment) > 0:
-      comment_user = pin.user.username if pin.user else 'anonymous'
-      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
-    items.append(pin.item)
+  template_items, comments_by_item = get_recent_items(request)
 
-  #items = Item.objects.order_by('-created')
-  template_items = set_images_for_items(uniq(items))
   return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
     'comments_by_item': comments_by_item,
   })
 
-#@cache_page(60 * 60)
-def popular(request):
-  if 'anon_key' not in request.session:
-    # we use our own session key because was having
-    # problems accessing session.session_key before it was set.
-    request.session['anon_key'] = random_string(20)
+def get_recent_items(request, str_page='0'):
+  page = int(str_page)
+  try:
+    pins = Paginator(Pin.objects.order_by('-created'), ITEM_BLOCK_SIZE).page(page+1)
+  except EmptyPage:
+    return [], []
 
-  pins = Pin.objects.order_by('-item__popularity')
   items = []
   comments_by_item = {}
   for pin in pins:
@@ -109,13 +75,78 @@ def popular(request):
       comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
     items.append(pin.item)
   template_items = set_images_for_items(uniq(items))
+
+  return items, comments_by_item
+
+def popular(request):
+  if 'anon_key' not in request.session:
+    # we use our own session key because was having
+    # problems accessing session.session_key before it was set.
+    request.session['anon_key'] = random_string(20)
+
+  template_items, comments_by_item = get_popular_items(request)
   return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
     'comments_by_item': comments_by_item,
   })
 
-#@cache_page(60 * 60)
+def get_popular_items(request, str_page='0'):
+  page = int(str_page)
+  try:
+    pins = Paginator(Pin.objects.order_by('-item__popularity'), ITEM_BLOCK_SIZE).page(page+1)
+  except EmptyPage:
+    return [], []
+
+  items = []
+  comments_by_item = {}
+  for pin in pins:
+    comments_by_item.setdefault(pin.item, [])
+    if pin.comment and len(pin.comment) > 0:
+      comment_user = pin.user.username if pin.user else 'anonymous'
+      comments_by_item[pin.item].append({'user': comment_user, 'comment': pin.comment})
+    items.append(pin.item)
+  template_items = set_images_for_items(uniq(items))
+
+  return template_items, comments_by_item
+
+
+def popular_json(request, page):
+  return api_response(request, get_popular_items, page)
+
+def recent_json(request, page):
+  return api_response(request, get_recent_items, page)
+
+def my_loot_json(request, page):
+  return api_response(request, get_my_loot_items, page)
+
+def user_loot_json(request, username, page):
+  # special case
+  items, comments_by_item = get_user_loot_items(request, username, page)
+  pin_html = ''
+  for item in items:
+    context = Context({
+      'item': item,
+      'comments_by_item': comments_by_item,
+      'hide_image': 'False',
+    })
+    pin_html += get_template('main/pin.html').render(context)
+  response = { 'success': True, 'pin_html': pin_html.replace('\n', ''), }
+  return HttpResponse(json.dumps(response), mimetype="application/json")
+
+def api_response(request, fn, page):
+  items, comments_by_item = fn(request, page)
+  pin_html = ''
+  for item in items:
+    context = Context({
+      'item': item,
+      'comments_by_item': comments_by_item,
+      'hide_image': 'False',
+    })
+    pin_html += get_template('main/pin.html').render(context)
+  response = { 'success': True, 'pin_html': pin_html.replace('\n', ''), }
+  return HttpResponse(json.dumps(response), mimetype="application/json")
+
 def my_loot(request):
   # Stop showing the enticing top banner
   request.session['visited'] = True
@@ -125,12 +156,35 @@ def my_loot(request):
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
 
+  items, comments_by_item = get_my_loot_items(request)
+
+  return global_render(request, 'main/myloot.html', {
+    'items': items,
+    'tab': 'my_loot',
+    'comments_by_item': comments_by_item,
+  })
+
+def get_my_loot_items(request, str_page='0'):
   if request.user.is_authenticated():
     pins = Pin.objects.filter(user=request.user)
   else:
     pins = Pin.objects.filter(session=request.session['anon_key'], user__isnull=True)
+  return get_generic_user_page_items(request, str_page, pins)
 
-  # TODO get items from pins and use set_images_for_items
+def get_user_loot_items(request, username, str_page='0'):
+  user_obj = get_object_or_404(User, username=username)
+  pins = Pin.objects.filter(user=user_obj)
+  return get_generic_user_page_items(request, str_page, pins)
+
+def get_generic_user_page_items(request, str_page, pins):
+  # This "get_X_items" is special, it needs the request
+  page = int(str_page)
+  try:
+    pins = Paginator(pins, ITEM_BLOCK_SIZE).page(page+1)
+  except EmptyPage:
+    return [], []
+
+
   items = []
   comments_by_item = {}
   for pin in pins:
@@ -149,12 +203,8 @@ def my_loot(request):
     items.append(item)
 
   items = uniq(items)
+  return items, comments_by_item
 
-  return global_render(request, 'main/myloot.html', {
-    'items': items,
-    'tab': 'my_loot',
-    'comments_by_item': comments_by_item,
-  })
 
 def get_item_info(request, item_type, item_id):
   try:
@@ -239,13 +289,6 @@ def add_item(request, item_type, item_id, verb):
     elif verb == 'have':
       item.increment_haves()
     item.save()
-
-
-  # Invalidate all caches
-  #expire_view_cache('recent')
-  #expire_view_cache('popular')
-  #expire_view_cache('user')
-  #expire_view_cache('user')
 
   # build json response
 
@@ -356,38 +399,3 @@ def uniq(seq):
   seen = set()
   seen_add = seen.add
   return [x for x in seq if x not in seen and not seen_add(x)]
-
-def expire_view_cache(view_name, args=[], namespace=None, key_prefix=None):
-  """
-  This function allows you to invalidate any view-level cache.
-      view_name: view function you wish to invalidate or it's named url pattern
-      args: any arguments passed to the view function
-      namepace: optioal, if an application namespace is needed
-      key prefix: for the @cache_page decorator for the function (if any)
-    http://stackoverflow.com/questions/2268417/expire-a-view-cache-in-django
-    http://stackoverflow.com/questions/7127972/django-how-to-invalidate-per-view-cache
-  """
-  from django.core.urlresolvers import reverse
-  from django.http import HttpRequest
-  from django.utils.cache import get_cache_key
-  from django.core.cache import cache
-  # create a fake request object
-  request = HttpRequest()
-  # Loookup the request path:
-  if namespace:
-      view_name = namespace + ":" + view_name
-  request.path = reverse(view_name, args=args)
-  # get cache key, expire if the cached item exists:
-  key = get_cache_key(request, key_prefix=key_prefix)
-  if key:
-      if cache.get(key):
-          # Delete the cache entry.
-          #
-          # Note that there is a possible race condition here, as another
-          # process / thread may have refreshed the cache between
-          # the call to cache.get() above, and the cache.set(key, None)
-          # below.  This may lead to unexpected performance problems under
-          # severe load.
-          cache.set(key, None, 0)
-      return True
-  return False
