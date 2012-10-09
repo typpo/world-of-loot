@@ -13,7 +13,7 @@ function ScrollManager() {
   }
 
   function loadData() {
-    if (loaderEnabled) return;
+    if (!loaderEnabled) return;
     // TODO show loader
     loaderEnabled = false;
     $.getJSON('/api/' + wol_tab_context + '/' + page, function(data) {

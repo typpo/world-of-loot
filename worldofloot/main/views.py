@@ -18,7 +18,7 @@ from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
-ITEM_BLOCK_SIZE = 3
+ITEM_BLOCK_SIZE = 15
 
 def global_render(request, path, args):
   first_visit = False
