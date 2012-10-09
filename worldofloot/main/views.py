@@ -75,7 +75,7 @@ def get_recent_items(request, str_page='0'):
     items.append(pin.item)
   template_items = set_images_for_items(uniq(items))
 
-  return items, comments_by_item
+  return template_items, comments_by_item
 
 def popular(request):
   if 'anon_key' not in request.session:
@@ -397,4 +397,5 @@ def set_image_for_item(item):
 def uniq(seq):
   seen = set()
   seen_add = seen.add
-  return [x for x in seq if x not in seen and not seen_add(x)]
+  ret = [x for x in seq if x.get_uid() not in seen and not seen_add(x.get_uid())]
+  return ret
