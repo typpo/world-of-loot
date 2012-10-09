@@ -5,8 +5,8 @@ function ScrollManager() {
   var loaderEnabled = true;
 
   function onScroll(event) {
-    // Check if we're within 100 pixels of the bottom edge of the browser window.
-    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 100);
+    // Check if we're within 200 pixels of the bottom edge of the browser window.
+    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 200);
     if(closeToBottom) {
       loadData();
     }
@@ -14,10 +14,13 @@ function ScrollManager() {
 
   function loadData() {
     if (!loaderEnabled) return;
-    // TODO show loader
+
+    $('#more-pins-loader').show('fast');
+
     loaderEnabled = false;
     $.getJSON('/api/' + wol_tab_context + '/' + page, function(data) {
-      loaderEnabled  = true;
+      loaderEnabled = true;
+      $('#more-pins-loader').hide('fast');
       if (!data || !data.pin_html || !data.success) {
         // nothing more (or an error occurred)
         return;

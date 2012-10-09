@@ -183,7 +183,6 @@ body {
 }
 
 .quick-message {
-  width: 200px;
   background-color: #fff;
   color: #404040;
   font-weight: bold;
@@ -202,6 +201,22 @@ body {
 .quick-message a {
   color: #404040;
   text-decoration: underline;
+}
+
+.more-pins-loader {
+  background-color: #fff;
+  color: #404040;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  width: 200px;
+  margin-top: -50px;
+  margin-left: -100px;
+  z-index: 9001;
+  -moz-border-radius:12px; -webkit-border-radius:12px;
 }
 
 /**** Transitions ****/
