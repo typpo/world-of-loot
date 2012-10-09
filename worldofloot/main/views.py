@@ -18,7 +18,7 @@ from worldofloot.main.models import Pin
 from worldofloot.main.models import Item
 from worldofloot.main.models import Image
 
-ITEM_BLOCK_SIZE = 15
+ITEM_BLOCK_SIZE = 5
 
 def global_render(request, path, args):
   first_visit = False
@@ -27,7 +27,6 @@ def global_render(request, path, args):
   args['first_visit'] = first_visit
 
   args['debug'] = DEBUG
-  args['items_per_block'] = ITEM_BLOCK_SIZE
   return render(request, path, args)
 
 def index(request):
@@ -94,7 +93,7 @@ def popular(request):
 def get_popular_items(request, str_page='0'):
   page = int(str_page)
   try:
-    pins = Paginator(Pin.objects.order_by('-item__popularity'), ITEM_BLOCK_SIZE).page(page+1)
+    pins = Paginator(Pin.objects.order_by('-item__popularity', '-created'), ITEM_BLOCK_SIZE).page(page+1)
   except EmptyPage:
     return [], []
 
