@@ -5,15 +5,15 @@
   <div class="delete-pin" data-item-type="{{ item.item_type }}" data-item-id="{{ item.item_id }}"><a href="#">×</a></div>
   {% endif %}
   {% if item.image.path %}
-  <a id="lightbox-trigger-{{ forloop.counter }}" href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
+  <a id="lightbox-trigger-{{ item.get_uid }}" href="{{ item.image.path }}" title="{{ item.name }}" data-title-id="title-{{item.get_uid}}" class="image-box fancybox" rel="gallery">
     <img src="{{ item.image.thumb_path }}" alt="{{ item.name }}" border="1" />
     </a>
   {% else %}
-    <a id="lightbox-trigger-{{ forloop.counter }} "href="/media/images/unavailable.png" title="{{ item.name }}" data-title-id="title-{{forloop.counter}}" class="image-box fancybox" rel="gallery">
+    <a id="lightbox-trigger-{{ item.get_uid }} "href="/media/images/unavailable.png" title="{{ item.name }}" data-title-id="title-{{item.get_uid}}" class="image-box fancybox" rel="gallery">
     <img src="/media/images/unavailable.png" border="1" />
     </a>
   {% endif %}
-  <div id="title-{{forloop.counter}}" style="display:none;">
+  <div id="title-{{item.get_uid}}" style="display:none;">
     {% if item.image.path %}
     <div class="attribution">
     photo by <a href="http://www.wowhead.com/user={{ item.image.attribution }}" target="_blank">{{ item.image.attribution }}</a> of <a href="http://wowhead.com" target="_blank">wowhead</a>
@@ -42,7 +42,7 @@
     </div>
   </div>  {# END FANCYBOX CODE #}
   <p>
-  <a href="#" class="js-open-corresponding-lightbox" data-lightbox-id="{{ forloop.counter }}"  rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
+  <a href="#" class="js-open-corresponding-lightbox" data-lightbox-id="{{ item.get_uid }}"  rel="{{ item.item_type }}={{ item.item_id }}">{{ item.name }}</a>
   </p>
   <span class="details">
       <span class="{{ item.item_id }}-{{ item.item_type }}-wants-count">

@@ -32,7 +32,7 @@ class Item(models.Model):
   tags = TaggableManager()
 
   def get_uid(self):
-    return '%s|%s' % (self.item_id, self.item_type)
+    return '%s-%s' % (self.item_id, self.item_type)
 
   def increment_wants(self):
     self.wants += 1
