@@ -41,7 +41,7 @@ $(function() {
   var scroll_manager = new ScrollManager();
   scroll_manager.Init();
 
-  var add_modal = new AddItemModal();
+  window.add_modal = new AddItemModal();
   add_modal.Init();
 
   window.auth_manager = new AuthManager();
