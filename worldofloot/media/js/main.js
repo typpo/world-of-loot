@@ -86,6 +86,9 @@ $(function() {
     return false;
   });
 
+  // hide pagination; it's only there for googlebot
+  $('#pagination').css('visibility', 'hidden');
+
   // route
   if (Util.getURLParameter('additem')) {
     // open additem dialog
