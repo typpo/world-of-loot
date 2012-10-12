@@ -43,17 +43,18 @@ def user(request, username):
 def about(request):
   return global_render(request, 'main/about.html', {})
 
-def recent(request):
+def recent(request, str_page='0'):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
 
-  template_items, comments_by_item = get_recent_items(request)
+  template_items, comments_by_item = get_recent_items(request, str_page)
 
   return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'recent',
+    'tab_number': int(str_page),
     'comments_by_item': comments_by_item,
   })
 
@@ -76,16 +77,17 @@ def get_recent_items(request, str_page='0'):
 
   return template_items, comments_by_item
 
-def popular(request):
+def popular(request, str_page='0'):
   if 'anon_key' not in request.session:
     # we use our own session key because was having
     # problems accessing session.session_key before it was set.
     request.session['anon_key'] = random_string(20)
 
-  template_items, comments_by_item = get_popular_items(request)
+  template_items, comments_by_item = get_popular_items(request, str_page)
   return global_render(request, 'main/myloot.html', {
     'items': template_items,
     'tab': 'popular',
+    'tab_number': int(str_page),
     'comments_by_item': comments_by_item,
   })
 

@@ -22,7 +22,7 @@
       var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
-      me.AddItem(item_id, item_type,
+      add_modal.AddItem(item_id, item_type,
         'want', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");
@@ -42,7 +42,7 @@
       var comment = ''; //prompt("Add a comment (or leave it blank)");
       var item_id = $(this).data('item-id');
       var item_type = $(this).data('item-type');
-      me.AddItem(item_id, item_type,
+      add_modal.AddItem(item_id, item_type,
         'have', comment, function(err, success) {
         if (err) {
           showMessage("You already added this!");

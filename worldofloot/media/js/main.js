@@ -41,7 +41,7 @@ $(function() {
   var scroll_manager = new ScrollManager();
   scroll_manager.Init();
 
-  var add_modal = new AddItemModal();
+  window.add_modal = new AddItemModal();
   add_modal.Init();
 
   window.auth_manager = new AuthManager();
@@ -85,6 +85,9 @@ $(function() {
     $.getJSON('/turn_off_welcome_banner', function() {});
     return false;
   });
+
+  // hide pagination; it's only there for googlebot
+  $('#pagination').css('visibility', 'hidden');
 
   // route
   if (Util.getURLParameter('additem')) {
