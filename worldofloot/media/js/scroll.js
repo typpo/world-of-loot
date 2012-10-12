@@ -14,6 +14,7 @@ function ScrollManager() {
 
   function loadData() {
     if (!loaderEnabled) return;
+    $('#pagination').css('visibility', 'hidden');
 
     $('#more-pins-loader').show('fast');
 
