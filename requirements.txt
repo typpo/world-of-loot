@@ -1,6 +1,5 @@
 Django==1.4.1
 South==0.7.6
-Pillow==1.7.7
 django_compressor==1.2
 cssmin==0.1.4
 jsmin==2.0.2
@@ -8,14 +7,7 @@ django-registration
 python-memcached
 redis-completion
 django-taggit
-django-allauth
 py-bcrypt
 psycopg2==2.4.5
-dj-database-url==0.2.0
-gunicorn==0.14.6
-gevent
-celery
 django-supervisor
 django-htmlmin
-
-boto
