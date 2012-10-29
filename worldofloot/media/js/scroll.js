@@ -6,7 +6,7 @@ function ScrollManager() {
 
   function onScroll(event) {
     // Check if we're within 200 pixels of the bottom edge of the browser window.
-    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 200);
+    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 400);
     if(closeToBottom) {
       loadData();
     }
