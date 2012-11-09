@@ -18,6 +18,7 @@
 <div id="fixed-top-container" class="fixed-top-container">
 
 {% block hero %}
+{% comment %}
 {% if first_visit %}
 <div id="welcome" class="well">
   <button id="welcome-close" type="button" class="close" aria-hidden="true">&times;</button>
@@ -26,6 +27,7 @@
   <p><a href="/my?additem=1" id="welcome-add-item" class="btn btn-primary btn-large">Start Your Own Wishlist &raquo;</a></p>
 </div>
 {% endif %}
+{% endcomment %}
 {% endblock %}
 
 
