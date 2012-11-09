@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'main',
     'taggit',
     'south',
+    'gunicorn',
     'djsupervisor',
     'compressor',
 )
