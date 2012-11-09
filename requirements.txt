@@ -11,3 +11,5 @@ py-bcrypt
 psycopg2==2.4.5
 django-supervisor
 django-htmlmin
+gunicorn
+boto

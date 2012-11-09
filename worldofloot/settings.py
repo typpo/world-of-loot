@@ -119,14 +119,11 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.auth.context_processors.auth",
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
     'django.core.context_processors.csrf',
     'django.contrib.messages.context_processors.messages',
 )
 
 AUTHENTICATION_BACKENDS = (
-    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 # Accounts settings
@@ -173,17 +170,8 @@ INSTALLED_APPS = (
     'main',
     'taggit',
     'south',
-    'gunicorn',
     'djsupervisor',
     'compressor',
-
-    #'allauth',
-    #'allauth.account',
-    #'allauth.socialaccount',
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.linkedin',
-    #'allauth.socialaccount.providers.openid',
 )
 
 try:
