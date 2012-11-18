@@ -3,12 +3,15 @@ function ScrollManager() {
 
   var page = 1;
   var loaderEnabled = true;
+  var lastLoaded = new Date().getTime();
 
   function onScroll(event) {
     // Check if we're within 200 pixels of the bottom edge of the browser window.
-    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 400);
-    if(closeToBottom) {
+    var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 800);
+    var now = new Date().getTime();
+    if(closeToBottom && now - lastLoaded > 300) {
       loadData();
+      lastLoaded = now;
     }
   }
 
