@@ -13,3 +13,4 @@ django-supervisor
 django-htmlmin
 gunicorn
 boto
+django-allauth
