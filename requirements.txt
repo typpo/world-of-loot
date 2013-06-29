@@ -14,3 +14,5 @@ django-htmlmin
 gunicorn
 boto
 django-allauth
+pil
+gevent

@@ -5,7 +5,7 @@ import os
 from redis_completion import RedisEngine
 
 CRAWL_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/all')
-engine = RedisEngine(prefix='worldofloot:autocomplete')
+engine = RedisEngine(prefix='worldofloot:autocomplete', db=2)
 
 def strip_punctuation(s):
   return re.sub(ur"\p{P}+", "", s)

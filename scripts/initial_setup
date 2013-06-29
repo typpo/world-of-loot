@@ -4,6 +4,6 @@
 virtualenv --no-site-packages venv
 source venv/bin/activate
 
-sudo apt-get install redis-server postgresql nginx
+sudo apt-get install redis-server postgresql nginx postgresql-server-dev-all python-dev libjpeg libjpeg-dev libevent-dev
 pip install -r requirements
 python worldofloot/autocomplete/autocomplete.py create
