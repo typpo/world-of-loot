@@ -16,3 +16,4 @@ include
 
 worldofloot/autocomplete/data
 worldofloot/local_settings.py
+worldofloot/media/CACHE

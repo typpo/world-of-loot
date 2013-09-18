@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.views.generic.simple import direct_to_template
 
 urlpatterns = patterns('worldofloot.main.views',
     url(r'^$', 'index', name='index'),
@@ -19,4 +20,6 @@ urlpatterns = patterns('worldofloot.main.views',
     url(r'^turn_off_welcome_banner/', 'turn_off_welcome_banner', name='turn_off_welcome_banner'),
     url(r'^login_or_create/', 'login_or_create', name='login_or_create'),
     url(r'^logout/', 'logout_user', name='logout_user'),
+    url(r'^robots\.txt$', direct_to_template,
+         {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 )

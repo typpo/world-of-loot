@@ -1,0 +1,4 @@
+Sitemap: http://www.worldofloot.com/media/sitemap.xml
+User-agent: *
+
+
